@@ -1,0 +1,22 @@
+[project]
+name = "oss-archive"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "m-shrief",email = "m.shrief.dev@proton.me"}
+]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "python-dotenv (>=1.0.1,<2.0.0)",
+    "psycopg[binary] (>=3.2.4,<4.0.0)",
+    "sqlalchemy (>=2.0.38,<3.0.0)",
+    "fastapi[standard] (>=0.115.8,<0.116.0)",
+    "structlog (>=25.1.0,<26.0.0)",
+    "httpx (>=0.28.1,<0.29.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
