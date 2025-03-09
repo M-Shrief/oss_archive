@@ -5,7 +5,7 @@ __env = dotenv_values(".env")
 ENV = __env.get("ENV")
 
 JSON_META_LISTS_PATH = __env.get("JSON_META_LISTS_PATH")
-
+JSON_LICENSES_PATH = __env.get("JSON_LICENSES_PATH")
 DB = {
     'user': __env.get("DB_USER"),
     'password': __env.get("DB_PASSWORD"),
