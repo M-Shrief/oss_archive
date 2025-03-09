@@ -1,0 +1,91 @@
+{
+    "key": "prog_langs",
+    "name": "Programming Languages",
+    "tags": [
+        "Programming Language",
+        "C",
+        "Zig",
+        "Python",
+        "Erlang",
+        "Go"
+    ],
+    "priority": 1,
+    "reviewed": true,
+    "items": [
+        {
+            "owner": "gcc", 
+            "type": "Organization",
+            "source": "custom",
+            "priority": 3,
+            "html_url": "https://gcc.gnu.org/",
+            "clone_url": "git://gcc.gnu.org/git/gcc.git",
+            "reviewed": true            
+        },
+        {
+            "owner": "llvm", 
+            "type": "Organization",
+            "source": "github",
+            "priority": 1,
+            "reviewed": true,
+            "actions": {
+                "download": "all",
+                "selected_repos": []
+            }
+        },
+        {
+            "owner": "golang",
+            "type": "Organization",
+            "source": "github",
+            "priority": 2,
+            "reviewed": true,
+            "actions": {
+                "download": "all",
+                "selected_repos": []
+            }
+        },
+        {
+            "owner": "python",
+            "type": "Organization",
+            "source": "github",
+            "priority": 1,
+            "reviewed": true,
+            "actions": {
+                "download": "all",
+                "selected_repos": []
+            }
+        },
+        {
+            "owner": "ziglang",
+            "type": "Organization",
+            "source": "github",
+            "priority": 2,
+            "reviewed": true,
+            "actions": {
+                "download": "all",
+                "selected_repos": []
+            }
+        },
+        {
+            "owner": "erlang",
+            "type": "Organization",
+            "source": "github",
+            "priority": 1,
+            "reviewed": true,
+            "actions": {
+                "download": "all",
+                "selected_repos": []
+            }
+        },
+        {
+            "owner": "vinta",
+            "type": "Individual",
+            "source": "github",
+            "priority": 1,
+            "reviewed": true,
+            "actions": {
+                "download": "only",
+                "selected_repos": ["awesome-python"]
+            }
+        }
+    ]
+}

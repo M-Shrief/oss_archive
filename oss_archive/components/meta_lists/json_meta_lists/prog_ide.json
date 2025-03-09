@@ -1,0 +1,56 @@
+{
+    "key": "prog_ide",
+    "name": "Open-Source IDEs for programming",
+    "tags": [
+        "IDE",
+        "Software Development",
+        "vim",
+        "neovim"
+    ],
+    "priority": 6,
+    "reviewed": true,
+    "items": [
+        {
+            "owner": "vim",
+            "type": "Organization",
+            "source": "github",
+            "priority": 1,
+            "reviewed": true,
+            "actions": {
+                "download": "all",
+                "selected_repos": []
+            }
+        },
+        {
+            "owner": "neovim",
+            "type": "Organization",
+            "source": "github",
+            "priority": 1,
+            "reviewed": true,
+            "actions": {
+                "download": "all",
+                "selected_repos": []
+            }
+        },
+        {
+            "owner": "VSCodium",
+            "type": "Organization",
+            "source": "github",
+            "priority": 2,
+            "reviewed": true,
+            "actions": {
+                "download": "all",
+                "selected_repos": []
+            }
+        },
+        {
+            "owner": "kate",
+            "type": "Organization",
+            "source": "custom", 
+            "priority": 8,
+            "html_url": "https://invent.kde.org/utilities/kate",
+            "clone_url": "https://invent.kde.org/utilities/kate.git",
+            "reviewed": true
+        }
+    ]
+}

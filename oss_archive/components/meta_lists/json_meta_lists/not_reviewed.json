@@ -1,0 +1,22 @@
+{
+    "key": "not_reviewed",
+    "name": "An example for a meta list that wasn't reviewed",
+    "tags": [
+        "not"
+    ],
+    "priority": 1,
+    "reviewed": false,
+    "items": [
+        {
+            "owner": "olves",
+            "type": "Organization",
+            "source": "github",
+            "priority": 3,
+            "reviewed": false,
+            "actions": {
+                "download": "all",
+                "selected_repos": []
+            }
+        }
+    ]
+}

@@ -1,0 +1,43 @@
+{
+    "priority": 1,
+    "key": "ai",
+    "name": "AI, Machine Learning, LLMs,...etc",
+    "tags": [
+        "AI",
+        "Machine Learning",
+        "LLMs",
+        "AGI",
+        "RAG",
+        "fine-tuning",
+        "AI agents"
+    ],
+    "reviewed": true,
+    "items": [
+        {
+            "priority": 1,
+            "owner": "deepseek-ai",
+            "type": "Organization",
+            "source": "github",
+            "html_url": null,
+            "clone_url": null,
+            "reviewed": true,
+            "actions": {
+                "download": "all",
+                "selected_repos": []
+            }
+        },
+        {
+            "priority": 1,
+            "owner": "ollama",
+            "type": "Organization",
+            "source": "github",
+            "html_url": null,
+            "clone_url": null,
+            "reviewed": true,
+            "actions": {
+                "download": "all",
+                "selected_repos": []
+            }
+        }
+    ]
+}

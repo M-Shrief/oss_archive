@@ -1,0 +1,24 @@
+{
+    "key": "internet",
+    "name": "Internet and the Web.",
+    "tags": [
+        "Internet",
+        "Web",
+        "Browsers"
+    ],
+    "priority": 4,
+    "reviewed": true,
+    "items": [
+        {
+            "owner": "librewolf",
+            "type": "Organization",
+            "source": "codeberg",
+            "priority": 3,
+            "reviewed": true,
+            "actions": {
+                "download": "all",
+                "selected_repos": []
+            }
+        }
+    ]
+}

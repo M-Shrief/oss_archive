@@ -1,0 +1,41 @@
+{
+    "key": "prog_web",
+    "name": "Open-Source Software focused on Web Development, Frontend, Backend,...etc",
+    "tags": [
+        "Web Development",
+        "Frontend",
+        "Backend",
+        "SPA",
+        "SSR",
+        "API",
+        "RESTful API",
+        "RPC",
+        "gRPC"
+    ],
+    "priority": 5,
+    "reviewed": true,
+    "items": [
+        {
+            "owner": "yyx990803",
+            "type": "Individual",
+            "source": "github",
+            "priority": 1,
+            "reviewed": true,
+            "actions": {
+                "download": "all",
+                "selected_repos": []
+            }
+        },
+        {
+            "owner": "fastapi",
+            "type": "Organization",
+            "source": "github",
+            "priority": 1,
+            "reviewed": true,
+            "actions": {
+                "download": "all",
+                "selected_repos": []
+            }
+        }
+    ]
+}

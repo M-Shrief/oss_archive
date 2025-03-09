@@ -1,0 +1,15 @@
+{
+    "key": "databases",
+    "name": "Databases",
+    "tags": [
+        "Database",
+        "SQL",
+        "NoSQL",
+        "Relational",
+        "Non-Relational",
+        "Cache"
+    ],
+    "priority": 2,
+    "reviewed": true,
+    "items": []
+}
