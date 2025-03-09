@@ -92,7 +92,7 @@ class OSSoftware(Base):
     owner_id: Mapped[UUID] = Column(ForeignKey("owners.id"), nullable=False)
     owner: Mapped["Owner"] = relationship(back_populates="os_softwares")
 
-    license_key: Mapped[str] = Column(ForeignKey("licenses.key"), nullable=True)
+    license_key: Mapped[str] = Column(ForeignKey("licenses.key"), default="unknown")
     license: Mapped["License"] = relationship()
 
     ### oss page (html page)
@@ -116,7 +116,7 @@ class License(Base):
 
     # A key for the licenses, like MIT licenses -> mit, and on.
     key: Mapped[str] = Column(String(length=128), primary_key=True, nullable=False)
-
+    fullname: Mapped[str] = Column(String(length=128), nullable=True)
     name: Mapped[str] = Column(String(length=128), nullable=True)
 
     # License's page
