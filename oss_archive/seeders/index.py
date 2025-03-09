@@ -1,14 +1,15 @@
 from typing import List
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from httpx import get
 ### 
 from oss_archive.config import ENV
 from oss_archive.utils.logger import logger
 from oss_archive.database.models import Owner, OSSList, License, OSSoftware
 
-from oss_archive.components.meta_lists.utils import get_meta_lists, get_meta_list_from_file
+from oss_archive.components.meta_lists.json import get_meta_lists, get_meta_list_from_file
 from oss_archive.components.meta_lists.schema import MetaList, MetaItem
+
+from oss_archive.components.licenses.json import get_licenses_from_json_file
 
 from oss_archive.seeders.sources import codeberg, github
 
@@ -45,28 +46,21 @@ def seed_oss_list(db: Session):
         return None
 
 def seed_licenses(db: Session):
-    licenses_res = get(url="https://api.github.com/licenses")
-    if licenses_res.status_code != 200:
-        return None
-    licenses_arr: [] = licenses_res.json()
-
     licenses: List[License] = []
 
-    for item in licenses_arr:
-        license_res = get(item["url"])
-        if license_res.status_code != 200:
-            return None
-        license_json: [] = license_res.json()
-
+    licenses_data = get_licenses_from_json_file()
+    if licenses_data is None:
+        raise Exception({'msg': "couldn't get licenses from json file"})
+    for item in licenses_data:
         lic = License()
-
-        lic.key = license_json["key"]
-        lic.name = license_json["name"]
-        lic.html_url = license_json["html_url"]
-        lic.api_url = license_json["url"]
+        lic.key = item.key
+        lic.name = item.name
+        lic.fullname = item.fullname
+        lic.html_url = item.html_url
+        lic.api_url = item.api_url
 
         licenses.append(lic)
-    
+
     db.add_all(licenses)
     db.commit()
     return
@@ -80,6 +74,7 @@ def seed_owners_and_their_repos(db: Session): # , oss_lists_items: List[Owner]
     for oss_list in reviewed_oss_lists:
         if ENV == "dev" and oss_list.key not in ["ai", "prog_web"]:
             continue
+        logger.info(f"seeding {oss_list.key} oss_list")
         meta_list = get_meta_list_from_file(f"{oss_list.key}.json")
         for item in meta_list.items:
             __add_meta_item(oss_list.key, item, db)
