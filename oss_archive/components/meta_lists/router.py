@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, status
 from typing import List
 # from sqlalchemy.ext.asyncio import AsyncSession
 ###
-from oss_archive.components.meta_lists.utils import get_meta_lists, get_meta_list_from_file, write_meta_list_file
+from oss_archive.components.meta_lists.json import get_meta_lists, get_meta_list_from_file, write_meta_list_file
 from oss_archive.components.meta_lists.schema import MetaList, MetaItem
 
 
