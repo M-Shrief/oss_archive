@@ -1,0 +1,15 @@
+{
+  "details": {
+    "path": "/api/meta_lists/prog_langs",
+    "method": "GET",
+    "pathParams": []
+  },
+  "requests": [
+    {
+      "contentType": "none"
+    }
+  ],
+  "operationType": "unary",
+  "invokerName": "rest",
+  "typeHint": "GET"
+}

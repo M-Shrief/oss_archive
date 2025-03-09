@@ -1,0 +1,15 @@
+{
+  "details": {
+    "path": "/api/oss_lists/ai",
+    "method": "GET",
+    "pathParams": []
+  },
+  "requests": [
+    {
+      "contentType": "none"
+    }
+  ],
+  "operationType": "unary",
+  "invokerName": "rest",
+  "typeHint": "GET"
+}

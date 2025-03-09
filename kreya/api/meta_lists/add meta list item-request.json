@@ -1,0 +1,10 @@
+{
+  "owner": "deepseek-ai2",
+  "type": "Organization",
+  "source": "github",
+  "priority": 1,
+  "actions": {
+    "download": "all",
+    "selected_repos": []
+  }
+}

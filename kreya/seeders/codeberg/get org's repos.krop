@@ -1,0 +1,15 @@
+{
+  "details": {
+    "path": "/api/v1/orgs/librewolf/repos",
+    "method": "GET",
+    "pathParams": []
+  },
+  "requests": [
+    {
+      "contentType": "none"
+    }
+  ],
+  "operationType": "unary",
+  "invokerName": "rest",
+  "typeHint": "GET"
+}

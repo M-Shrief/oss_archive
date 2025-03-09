@@ -1,0 +1,12 @@
+{
+  "settings": [
+    {
+      "options": {
+        "rest": {
+          "endpoint": "https://api.github.com",
+          "pathParams": []
+        }
+      }
+    }
+  ]
+}
