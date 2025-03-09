@@ -59,7 +59,10 @@ class LicenseKeyField(BaseModel):
     key: Annotated[str, Field(max_length=128, examples=["mit"])]
 
 class LicenseNameField(BaseModel):
-    name: Annotated[str, Field(max_length=128, examples=["MIT License"])]
+    name: Annotated[str, Field(max_length=128, examples=["MIT"])]
+
+class LicenseFullnameField(BaseModel):
+    fullname: Annotated[str, Field(max_length=128, examples=["MIT License"])]
 
 class LicenseHTMLURLField(BaseModel):
     html_url: Annotated[str, Field(max_length=128, examples=["http://choosealicense.com/licenses/mit/"])]
