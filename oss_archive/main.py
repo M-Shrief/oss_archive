@@ -1,4 +1,4 @@
-from fastapi import FastAPI, status, Depends
+from fastapi import FastAPI, status, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -6,6 +6,8 @@ from sqlalchemy.orm import Session
 ###
 from oss_archive.database.index import lifespan, get_db, get_sync_db
 from oss_archive.seeders.index import seed as seed_db
+
+from oss_archive.utils.logger import logger
 
 from oss_archive.components.meta_lists.router import router as meta_lists_router
 from oss_archive.components.oss_lists.router import router as oss_lists_router
@@ -51,8 +53,12 @@ async def homepage():
 
 @app.get("/seed", status_code=status.HTTP_200_OK)
 def seed(db: Session = Depends(get_sync_db)):    
-    seed_db(db)
-    return {"message": "Seedded The Database Successfully"}
+    try:
+        seed_db(db)
+        return {"message": "Seedded The Database Successfully"}
+    except Exception as e:
+        logger.error("Seeding failure", error=e)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Seeding operation has failed")
 
 @app.get("/ping")
 async def ping():    
