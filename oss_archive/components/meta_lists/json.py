@@ -40,10 +40,13 @@ def get_meta_list_from_file(meta_list_file: str)-> MetaList | None:
         logger.error(f"Unknown error in {meta_list_file}", error=e)
         return None
 
-def write_meta_list_file(file_name: str, meta_list: MetaList):
-    with open(f"{JSON_META_LISTS_PATH}/{file_name}", "w") as file:
-        json.dump(meta_list.model_dump(), file)
-
+def write_meta_list_file(file_name: str, meta_list: MetaList)->bool:
+    try:
+        with open(f"{JSON_META_LISTS_PATH}/{file_name}", "w") as file:
+            json.dump(meta_list.model_dump(), file)
+            return True
+    except Exception:
+        return False
 
 # def get_files_as_dict() -> Dict[str,str]:
 #     files_dict = {}

@@ -56,20 +56,16 @@ async def add_meta_list_item(meta_list_key: str, meta_item: MetaItem):
 
         meta_list = get_meta_list_from_file(file_name)
         if meta_list is None:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Error finding the meta_list, please try again later.")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Meta List is not found.")
 
         # mark it as not reviewed to check them before adding it to the database.
         meta_item.reviewed = False
         meta_list.items.append(meta_item)
 
-        write_meta_list_file(file_name, meta_list)
-        
-        ###
-        # then we need to add the meta_item be reviewed
-        # then we need to add it to the database 
-        ###
+        is_written = write_meta_list_file(file_name, meta_list)
+        if not is_written:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Error when adding meta item, try again later.")
 
-        # reload the meta_list again
         meta_list = get_meta_list_from_file(file_name)
         return meta_list
 
