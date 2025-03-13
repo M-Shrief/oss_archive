@@ -9,7 +9,7 @@ class IdField(BaseModel):
     id: UUID
 
 class PriorityField(BaseModel):
-    priority: Annotated[int, Field(ge=0, le=10)]
+    priority: Annotated[int, Field(ge=1, le=10)]
 
 class ReviewedField(BaseModel):
     reviewed: bool
