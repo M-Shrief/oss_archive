@@ -16,13 +16,13 @@ from oss_archive.seeders.sources import codeberg, github
 
 
 def seed(db: Session):
-    seed_oss_list(db)
+    seed_oss_lists(db)
     seed_licenses(db)
     # seed_owners_and_their_repos(db)
     return
 
 
-def seed_oss_list(db: Session):
+def seed_oss_lists(db: Session):
     meta_lists: List[MetaList] = get_meta_lists()
     try:
         oss_lists: List[OSSList] = []
