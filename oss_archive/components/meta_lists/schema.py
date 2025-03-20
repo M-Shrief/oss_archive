@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from typing import Annotated, List
 from enum import Enum
 ###
-from oss_archive.utils.schemas import PriorityField, OwnerType
+from oss_archive.utils.schemas import PriorityField, IsSeededField, OwnerType
 
 ### For json_meta_lists files
 class DownloadActions(str, Enum):
@@ -21,7 +21,7 @@ class Actions(BaseModel):
     selected_repos: Annotated[List[str], Field(examples=[["repo_name_1", "repo_name_2"]])]
     repos_details: Annotated[List[Repo], Field(examples=[], default=[])]
 
-class MetaItem(PriorityField, BaseModel):
+class MetaItem(PriorityField, IsSeededField, BaseModel):
     owner: Annotated[str, Field(max_length=256, examples=["ai"])]
     type: Annotated[OwnerType, Field()]
     source: Annotated[str, Field(max_length=256, examples=["github"])]
@@ -30,7 +30,7 @@ class MetaItem(PriorityField, BaseModel):
     reviewed: Annotated[bool, Field(default=False)]
     actions: Annotated[Actions | None, Field(default=None)]
 
-class MetaList(PriorityField, BaseModel):
+class MetaList(PriorityField, IsSeededField, BaseModel):
     key: Annotated[str, Field(max_length=256, examples=["ai"])]
     name: Annotated[str, Field(max_length=256, examples=["ai"])]
     tags: Annotated[List[str], Field(examples=[["AI", "Machine Learning"]])]
