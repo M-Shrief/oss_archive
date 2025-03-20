@@ -1,12 +1,12 @@
 from typing import List
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy.orm import Session
 ### 
 from oss_archive.config import ENV
 from oss_archive.utils.logger import logger
 from oss_archive.database.models import Owner, OSSList, License, OSSoftware
 
-from oss_archive.components.meta_lists.json import get_meta_lists, get_meta_list_from_file
+from oss_archive.components.meta_lists.json import get_meta_lists, get_meta_list_from_file, write_meta_list_file
 from oss_archive.components.meta_lists.schema import MetaList, MetaItem
 
 from oss_archive.components.licenses.json import get_licenses_from_json_file
@@ -25,20 +25,36 @@ def seed(db: Session):
 def seed_oss_list(db: Session):
     meta_lists: List[MetaList] = get_meta_lists()
     try:
-        new_lists: List[OSSList] = []
-        for item in meta_lists:
+        oss_lists: List[OSSList] = []
+        for meta_list in meta_lists:   
+            if not meta_list.reviewed:
+                logger.info(f"Skipped {meta_list.key}'s meta list, because it's not reviewed")
+                continue
+            if meta_list.is_seeded:
+                logger.info(f"Skipped {meta_list.key}'s meta list, because it's seeded")
+                continue
+            
             oss_list = OSSList()
 
-            oss_list.key = item.key
-            oss_list.name = item.name
-            oss_list.tags = item.tags
-            oss_list.priority = item.priority
-            oss_list.reviewed = item.reviewed
+            oss_list.key = meta_list.key
+            oss_list.name = meta_list.name
+            oss_list.tags = meta_list.tags
+            oss_list.priority = meta_list.priority
+            oss_list.reviewed = meta_list.reviewed
 
-            new_lists.append(oss_list)
-        
-        db.add_all(new_lists)
+            oss_lists.append(oss_list)
+
+        db.add_all(oss_lists)
         db.commit()
+
+        ### if all was commited to the database successfully, then mark each meta_list.is_seeded = True
+        for meta_list in meta_lists:
+            meta_list.is_seeded = True
+            is_written = write_meta_list_file(meta_list)
+            if not is_written:
+                stmt = delete(OSSList).where(OSSList.key == meta_list.key)
+                db.execute(statement=stmt)
+                db.commit()
 
         return 
     except Exception as e:
