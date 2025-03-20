@@ -31,15 +31,10 @@ async def get_all_meta_lists():
 )
 async def get_meta_list(meta_list_key: str):
     try:
-        meta_lists = get_meta_lists()
-        # A dict with meta_list.key as a key, and the meta_list index in the array as a value
-        # like {"ai": 0, "prog_langs": 1,...}
-        meta_lists_keys = dict([(meta_list.key, i) for i, meta_list in enumerate(meta_lists)])
-
-        meta_list_index = meta_lists_keys[meta_list_key]
-        return meta_lists[meta_list_index]
-    except KeyError:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Meta List is not found")
+        meta_list = get_meta_list_from_file(f"{meta_list_key}.json")
+        if meta_list is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Meta List is not found.")
+        return meta_list
     except Exception:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unknown error, try again later")
 
