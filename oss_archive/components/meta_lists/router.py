@@ -52,9 +52,9 @@ async def get_meta_list(meta_list_key: str):
 async def add_meta_list_item(meta_list_key: str, meta_item: MetaItem):
     try:
         ### Get the meta_list file by key, benefiting from the naming convention we use.
-        file_name = f"{meta_list_key}.json"
+        meta_list_file = f"{meta_list_key}.json"
 
-        meta_list = get_meta_list_from_file(file_name)
+        meta_list = get_meta_list_from_file(meta_list_file)
         if meta_list is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Meta List is not found.")
 
@@ -62,11 +62,11 @@ async def add_meta_list_item(meta_list_key: str, meta_item: MetaItem):
         meta_item.reviewed = False
         meta_list.items.append(meta_item)
 
-        is_written = write_meta_list_file(file_name, meta_list)
+        is_written = write_meta_list_file(meta_list)
         if not is_written:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Error when adding meta item, try again later.")
 
-        meta_list = get_meta_list_from_file(file_name)
+        meta_list = get_meta_list_from_file(meta_list_file)
         return meta_list
 
     except Exception:
