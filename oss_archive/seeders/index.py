@@ -26,6 +26,17 @@ def seed_oss_list(db: Session):
     meta_lists: List[MetaList] = get_meta_lists()
     try:
         oss_lists: List[OSSList] = []
+
+        ### Early return if all of the reviewed ones were seeded
+        all_seeded = True
+        for meta_list in meta_lists:
+            if meta_list.reviewed and not meta_list.is_seeded:
+                all_seeded = False
+            
+        if all_seeded:
+            logger.info("All OSS Lists are already seeded")
+            return
+
         for meta_list in meta_lists:   
             if not meta_list.reviewed:
                 logger.info(f"Skipped {meta_list.key}'s meta list, because it's not reviewed")
@@ -67,6 +78,19 @@ def seed_licenses(db: Session):
     licenses_data = get_licenses_from_json_file()
     if licenses_data is None:
         raise Exception({'msg': "couldn't get licenses from json file"})
+
+
+    ### Early return if all of them were seeded
+    all_seeded = True
+    for license_data in licenses_data:
+        if not license_data.is_seeded:
+            all_seeded = False
+        
+    if all_seeded:
+        logger.info("All Licenses are already seeded")
+        return
+
+    
     for license_data in licenses_data:
         if license_data.is_seeded:
             continue
