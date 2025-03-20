@@ -5,6 +5,7 @@ from oss_archive.utils import schemas
 class License(
     schemas.LicenseKeyField,
     schemas.LicenseNameField,
+    schemas.IsSeededField,
     schemas.LicenseFullnameField,
     schemas.LicenseHTMLURLField,
     schemas.LicenseAPIURLField,
