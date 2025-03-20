@@ -12,8 +12,10 @@ class PriorityField(BaseModel):
     priority: Annotated[int, Field(ge=1, le=10)]
 
 class ReviewedField(BaseModel):
-    reviewed: bool
+    reviewed:  Annotated[bool, Field(default=False)]
 
+class IsSeededField(BaseModel):
+    is_seeded: Annotated[bool, Field(default=False)]
 class CreatedAtField(BaseModel):
     created_at: datetime
 
