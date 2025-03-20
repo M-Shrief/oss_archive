@@ -26,6 +26,7 @@ def get_meta_lists_files() -> List[str]:
     return meta_lists
 
 def get_meta_list_from_file(meta_list_file: str)-> MetaList | None:
+    """meta_list_file naming convention is {meta_list.key}.json"""
     try:
         with open(f"{JSON_META_LISTS_PATH}/{meta_list_file}", 'r') as file:
             data = json.load(file)
@@ -40,9 +41,9 @@ def get_meta_list_from_file(meta_list_file: str)-> MetaList | None:
         logger.error(f"Unknown error in {meta_list_file}", error=e)
         return None
 
-def write_meta_list_file(file_name: str, meta_list: MetaList)->bool:
+def write_meta_list_file(meta_list: MetaList)->bool:
     try:
-        with open(f"{JSON_META_LISTS_PATH}/{file_name}", "w") as file:
+        with open(f"{JSON_META_LISTS_PATH}/{meta_list.key}.json", "w") as file:
             json.dump(meta_list.model_dump(), file)
             return True
     except Exception:
