@@ -25,3 +25,16 @@ def get_licenses_from_json_file()-> List[License] | None:
     except Exception as e:
         logger.error(f"Unknown error in {JSON_LICENSES_PATH}", error=e)
         return None
+
+
+def write_licenses_file(licenses: List[License])->bool:
+    try:
+        licenses_json = []
+        for item in licenses:
+            licenses_json.append(item.model_dump())
+            
+        with open(JSON_LICENSES_PATH, "w") as file:
+            json.dump(licenses_json, file)
+            return True
+    except Exception:
+        return False
