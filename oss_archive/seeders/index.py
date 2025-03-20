@@ -9,7 +9,7 @@ from oss_archive.database.models import Owner, OSSList, License, OSSoftware
 from oss_archive.components.meta_lists.json import get_meta_lists, get_meta_list_from_file, write_meta_list_file
 from oss_archive.components.meta_lists.schema import MetaList, MetaItem
 
-from oss_archive.components.licenses.json import get_licenses_from_json_file
+from oss_archive.components.licenses.json import get_licenses_from_json_file, write_licenses_file
 
 from oss_archive.seeders.sources import codeberg, github
 
@@ -18,7 +18,7 @@ from oss_archive.seeders.sources import codeberg, github
 def seed(db: Session):
     seed_oss_list(db)
     seed_licenses(db)
-    seed_owners_and_their_repos(db)
+    # seed_owners_and_their_repos(db)
     return
 
 
@@ -67,18 +67,31 @@ def seed_licenses(db: Session):
     licenses_data = get_licenses_from_json_file()
     if licenses_data is None:
         raise Exception({'msg': "couldn't get licenses from json file"})
-    for item in licenses_data:
+    for license_data in licenses_data:
+        if license_data.is_seeded:
+            continue
         lic = License()
-        lic.key = item.key
-        lic.name = item.name
-        lic.fullname = item.fullname
-        lic.html_url = item.html_url
-        lic.api_url = item.api_url
+        lic.key = license_data.key
+        lic.name = license_data.name
+        lic.fullname = license_data.fullname
+        lic.html_url = license_data.html_url
+        lic.api_url = license_data.api_url
 
         licenses.append(lic)
 
     db.add_all(licenses)
     db.commit()
+
+    ### if all was commited to the database successfully, then mark each meta_list.is_seeded = True
+    for license_data in licenses_data:
+        license_data.is_seeded = True
+
+    is_written = write_licenses_file(licenses_data)
+    if not is_written:
+        stmt = delete(License)
+        db.execute(statement=stmt)
+        db.commit()
+
     return
 
 
