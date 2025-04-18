@@ -2,6 +2,7 @@ from fastapi import FastAPI, status, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from sqlalchemy.orm import Session
+from scalar_fastapi import get_scalar_api_reference
 ###
 from oss_archive.database.index import lifespan, get_sync_db
 from oss_archive.seeders.index import seed as seed_db
@@ -48,6 +49,18 @@ async def homepage():
             "documentation_url-1": app.docs_url,
             "documentation_url-2": app.redoc_url,
         }
+
+
+# Scalar Modern API Client and Reference, check on https://github.com/scalar/scalar
+@app.get("/scalar", include_in_schema=False)
+async def scalar_html():
+    if app.openapi_url is None:
+        return "Not Available"
+
+    return get_scalar_api_reference(
+        openapi_url=app.openapi_url,
+        title=app.title,
+    )
 
 @app.get("/seed", status_code=status.HTTP_200_OK)
 def seed(db: Session = Depends(get_sync_db)):    
