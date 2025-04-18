@@ -1,19 +1,17 @@
-from fastapi import FastAPI, status, Depends, HTTPException, status
+from fastapi import FastAPI, status, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 ###
-from oss_archive.database.index import lifespan, get_db, get_sync_db
+from oss_archive.database.index import lifespan, get_sync_db
 from oss_archive.seeders.index import seed as seed_db
 
 from oss_archive.utils.logger import logger
 
 from oss_archive.components.meta_lists.router import router as meta_lists_router
-from oss_archive.components.oss_lists.router import router as oss_lists_router
 from oss_archive.components.licenses.router import router as licenses_router
+from oss_archive.components.meta_items.router import router as meta_items_router
 from oss_archive.components.os_softwares.router import router as os_softwares_router
-from oss_archive.components.owners.router import router as owners_router
 
 
 app = FastAPI(
@@ -67,7 +65,6 @@ async def ping():
 
 ### Adding API routes
 app.include_router(meta_lists_router, prefix="/api")
-app.include_router(oss_lists_router, prefix="/api")
 app.include_router(licenses_router, prefix="/api")
-app.include_router(owners_router, prefix="/api")
+app.include_router(meta_items_router, prefix="/api")
 app.include_router(os_softwares_router, prefix="/api")
