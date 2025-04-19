@@ -3,7 +3,7 @@ import structlog
 ###
 from oss_archive.config import ENV
 
-proccessors_configs: []
+proccessors_configs = []
 
 if ENV == "dev": # Prettier logs for development
     proccessors_configs = [
@@ -32,4 +32,5 @@ structlog.configure(
     cache_logger_on_first_use=False
 )
 
-logger: logging.Logger = structlog.get_logger()
+logger: structlog.ReturnLogger = structlog.get_logger() # pyright: ignore[reportAny]
+
