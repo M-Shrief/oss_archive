@@ -2,7 +2,8 @@ from fastapi import FastAPI, status, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from sqlalchemy.orm import Session
-from scalar_fastapi import get_scalar_api_reference
+from scalar_fastapi import get_scalar_api_reference # pyright:ignore[reportMissingTypeStubs]
+from typing import Annotated
 ###
 from oss_archive.database.index import lifespan, get_sync_db
 from oss_archive.seeders.index import seed as seed_db
@@ -51,9 +52,12 @@ async def homepage():
         }
 
 
-# Scalar Modern API Client and Reference, check on https://github.com/scalar/scalar
-@app.get("/scalar", include_in_schema=False)
-async def scalar_html():
+@app.get(
+    "/scalar",
+    include_in_schema=False,
+    description="Scalar Modern API Client and Reference, check on https://github.com/scalar/scalar"
+    )
+async def scalar_html() :
     if app.openapi_url is None:
         return "Not Available"
 
@@ -63,12 +67,12 @@ async def scalar_html():
     )
 
 @app.get("/seed", status_code=status.HTTP_200_OK)
-def seed(db: Session = Depends(get_sync_db)):    
+def seed(db: Annotated[Session, Depends(dependency=get_sync_db)]):
     try:
         seed_db(db)
         return {"message": "Seedded The Database Successfully"}
     except Exception as e:
-        logger.error("Seeding failure", error=e)
+        logger.error("Seeding failure", error=e) # pyright: ignore[reportCallIssue]
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Seeding operation has failed")
 
 @app.get("/ping")
