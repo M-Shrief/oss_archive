@@ -13,7 +13,7 @@ async def compress(oss_fullname: str) -> bool:
         
         return True
     except Exception as e:
-        logger.error("Error compressing the directory", error=e) # pyright:ignore[reportCallIssue]
+        logger.error("Error compressing the directory", error=e) 
         return False
     
 
@@ -28,5 +28,5 @@ async def decompress(oss_fullname: str) -> bool:
             tar.extractall(path=ARCHIVE_BASE_PATH)
         return True
     except Exception as e:
-        logger.error("Error decompressing tar file" , error=e) # pyright:ignore[reportCallIssue]
+        logger.error("Error decompressing tar file" , error=e) 
         return False

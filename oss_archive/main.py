@@ -72,7 +72,7 @@ def seed(db: Annotated[Session, Depends(dependency=get_sync_db)]):
         seed_db(db)
         return {"message": "Seedded The Database Successfully"}
     except Exception as e:
-        logger.error("Seeding failure", error=e) # pyright: ignore[reportCallIssue]
+        logger.error("Seeding failure", error=e) 
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Seeding operation has failed")
 
 @app.get("/ping")

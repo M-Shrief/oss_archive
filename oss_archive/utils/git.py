@@ -9,7 +9,7 @@ async def clone(clone_url: str, owner_username: str, repo_name: str) -> tuple[Co
     # call(["git", "clone", "https://github.com/M-Shrief/Adeeb_ExpressTS.git"])
     result: CompletedProcess[bytes] = run(args=["git", "clone", clone_url, f"{ARCHIVE_BASE_PATH}/{owner_username}:{repo_name}"], capture_output=True)
     if result.returncode != 0:
-        logger.error(f"Error when cloning {clone_url}", git_result=result) # pyright: ignore[reportCallIssue]
+        logger.error(f"Error when cloning {clone_url}", git_result=result) 
         return result, False
         
     return result, True
