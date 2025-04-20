@@ -1,1 +1,1 @@
-{"is_seeded": true, "priority": 2, "key": "databases", "name": "Databases", "tags": ["Database", "SQL", "NoSQL", "Relational", "Non-Relational", "Cache"], "reviewed": false, "items": []}
+{"is_seeded": true, "reviewed": true, "priority": 1, "key": "databases", "name": "Databases", "tags": ["Database", "DBMS", "SQL", "NoSQL", "Relational", "Non-Relational", "Cache"], "items": []}
