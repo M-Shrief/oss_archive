@@ -1,5 +1,3 @@
-from fastapi import FastAPI
-from contextlib import asynccontextmanager
 from typing import Any
 from sqlalchemy.engine import URL , create_engine
 from sqlalchemy.orm.session import Session, sessionmaker
@@ -7,7 +5,6 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 from collections.abc import AsyncGenerator, Generator
 #####
 from oss_archive.config import DB
-from oss_archive.database.models import Base
 
 db_url = URL.create(
     drivername="postgresql+psycopg",
@@ -43,11 +40,3 @@ def get_sync_db() -> Generator[Session, Any]:
         yield db
     finally:
         db.close()
-
-
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    async with async_engine.begin() as connection:
-        await connection.run_sync(Base.metadata.create_all)
-    yield

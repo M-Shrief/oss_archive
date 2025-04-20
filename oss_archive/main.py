@@ -1,11 +1,13 @@
 from fastapi import FastAPI, status, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
+from contextlib import asynccontextmanager
 from sqlalchemy.orm import Session
 from scalar_fastapi import get_scalar_api_reference # pyright:ignore[reportMissingTypeStubs]
 from typing import Annotated
 ###
-from oss_archive.database.index import lifespan, get_sync_db
+from oss_archive.database.index import get_sync_db, async_engine
+from oss_archive.database.models import Base
 from oss_archive.seeders.index import seed as seed_db
 
 from oss_archive.utils.logger import logger
@@ -15,6 +17,13 @@ from oss_archive.components.licenses.router import router as licenses_router
 from oss_archive.components.meta_items.router import router as meta_items_router
 from oss_archive.components.os_softwares.router import router as os_softwares_router
 
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    async with async_engine.begin() as connection:
+        await connection.run_sync(Base.metadata.create_all)
+    yield
 
 app = FastAPI(
     lifespan=lifespan,
