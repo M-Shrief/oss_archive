@@ -56,8 +56,9 @@ async def homepage():
             "title": app.title,
             "description": app.description,
             "version": app.version,
-            "documentation_url-1": app.docs_url,
-            "documentation_url-2": app.redoc_url,
+            "Swagger-documentation_url": app.docs_url,
+            "Redoc-documentation_url": app.redoc_url,
+            "Scalar-documentation_url": "/scalar"            
         }
 
 
