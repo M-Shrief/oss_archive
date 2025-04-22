@@ -1,1 +1,39 @@
-{"is_seeded": true, "reviewed": true, "priority": 1, "key": "ai", "name": "AI, Machine Learning, LLMs,...etc", "tags": ["AI", "Machine Learning", "LLMs", "AGI", "RAG", "fine-tuning", "AI agents"], "items": [{"is_seeded": true, "reviewed": true, "priority": 1, "html_url": null, "owner_username": "deepseek-ai", "owner_type": "Organization", "source": "github", "other_sources": [], "actions": "download_all", "actions_on": []}, {"is_seeded": true, "reviewed": true, "priority": 1, "html_url": null, "owner_username": "ollama", "owner_type": "Organization", "source": "github", "other_sources": [], "actions": "download_all", "actions_on": []}]}
+{
+    "key": "ai",
+    "name": "AI, Machine Learning, LLMs,...etc",
+    "tags": [
+        "AI",
+        "Machine Learning",
+        "LLMs",
+        "AGI",
+        "RAG",
+        "fine-tuning",
+        "AI agents"
+    ],
+    "reviewed": true,
+    "priority": 1,
+    "items": [
+        {
+            "reviewed": true,
+            "priority": 1,
+            "html_url": null,
+            "owner_username": "deepseek-ai",
+            "owner_type": "Organization",
+            "source": "github",
+            "other_sources": [],
+            "actions": "download_all",
+            "actions_on": []
+        },
+        {
+            "reviewed": true,
+            "priority": 1,
+            "html_url": null,
+            "owner_username": "ollama",
+            "owner_type": "Organization",
+            "source": "github",
+            "other_sources": [],
+            "actions": "download_all",
+            "actions_on": []
+        }
+    ]
+}

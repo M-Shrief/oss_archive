@@ -1,1 +1,27 @@
-{"is_seeded": true, "reviewed": true, "priority": 4, "key": "pkms", "name": "Personal Knowledge Management Systems", "tags": ["PKMS", "Knowledge", "Management", "Privacy", "Non-Relational", "Cache"], "items": [{"is_seeded": true, "reviewed": true, "priority": 1, "html_url": null, "owner_username": "siyuan-note", "owner_type": "Organization", "source": "github", "other_sources": [], "actions": "download_all", "actions_on": []}]}
+{
+    "key": "pkms",
+    "name": "Personal Knowledge Management Systems",
+    "tags": [
+        "PKMS",
+        "Knowledge",
+        "Management",
+        "Privacy",
+        "Non-Relational",
+        "Cache"
+    ],
+    "reviewed": true,
+    "priority": 4,
+    "items": [
+        {
+            "reviewed": true,
+            "priority": 1,
+            "html_url": null,
+            "owner_username": "siyuan-note",
+            "owner_type": "Organization",
+            "source": "github",
+            "other_sources": [],
+            "actions": "download_all",
+            "actions_on": []
+        }
+    ]
+}

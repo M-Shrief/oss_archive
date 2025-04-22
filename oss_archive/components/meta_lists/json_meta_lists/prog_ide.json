@@ -1,7 +1,4 @@
 {
-    "is_seeded": true,
-    "reviewed": true,
-    "priority": 6,
     "key": "prog_ide",
     "name": "Open-Source IDEs for programming",
     "tags": [
@@ -10,9 +7,10 @@
         "vim",
         "neovim"
     ],
+    "reviewed": true,
+    "priority": 6,
     "items": [
         {
-            "is_seeded": true,
             "reviewed": true,
             "priority": 1,
             "html_url": null,
@@ -24,7 +22,6 @@
             "actions_on": []
         },
         {
-            "is_seeded": true,
             "reviewed": true,
             "priority": 1,
             "html_url": null,
@@ -36,7 +33,6 @@
             "actions_on": []
         },
         {
-            "is_seeded": false,
             "reviewed": true,
             "priority": 1,
             "html_url": "https://zed.dev/",
@@ -48,7 +44,6 @@
             "actions_on": []
         },
         {
-            "is_seeded": false,
             "reviewed": true,
             "priority": 2,
             "html_url": "https://pulsar-edit.dev/",
@@ -60,7 +55,6 @@
             "actions_on": []
         },
         {
-            "is_seeded": true,
             "reviewed": true,
             "priority": 3,
             "html_url": null,
@@ -72,7 +66,6 @@
             "actions_on": []
         },
         {
-            "is_seeded": false,
             "reviewed": true,
             "priority": 8,
             "html_url": "https://invent.kde.org/utilities/kate",

@@ -1,1 +1,61 @@
-{"is_seeded": true, "reviewed": true, "priority": 1, "key": "databases", "name": "Databases", "tags": ["Database", "DBMS", "SQL", "NoSQL", "Relational", "Non-Relational", "Cache"], "items": []}
+{
+    "key": "databases",
+    "name": "Databases",
+    "tags": [
+        "Database",
+        "DBMS",
+        "SQL",
+        "NoSQL",
+        "Relational",
+        "Non-Relational",
+        "Cache"
+    ],
+    "reviewed": true,
+    "priority": 1,
+    "items": [
+        {
+            "reviewed": true,
+            "priority": 1,
+            "html_url": null,
+            "owner_username": "postgres",
+            "owner_type": "Organization",
+            "source": "github",
+            "other_sources": [],
+            "actions": "download_all",
+            "actions_on": []
+        },
+        {
+            "reviewed": true,
+            "priority": 1,
+            "html_url": null,
+            "owner_username": "sqlite",
+            "owner_type": "User",
+            "source": "github",
+            "other_sources": [],
+            "actions": "download_all",
+            "actions_on": []
+        },
+        {
+            "reviewed": true,
+            "priority": 2,
+            "html_url": null,
+            "owner_username": "mysql",
+            "owner_type": "Organization",
+            "source": "github",
+            "other_sources": [],
+            "actions": "download_all",
+            "actions_on": []
+        },
+        {
+            "reviewed": true,
+            "priority": 3,
+            "html_url": null,
+            "owner_username": "Valkey",
+            "owner_type": "User",
+            "source": "github",
+            "other_sources": [],
+            "actions": "download_all",
+            "actions_on": []
+        }
+    ]
+}
