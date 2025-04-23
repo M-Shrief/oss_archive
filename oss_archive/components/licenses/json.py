@@ -1,18 +1,20 @@
 import json
 from pydantic import ValidationError
-from typing import List 
 ###
 from oss_archive.utils.logger import logger
 from oss_archive.config import JSON_LICENSES_PATH
-from oss_archive.components.licenses.schema import License
+from oss_archive.schemas.license import JSONSchema
 
-def get_licenses_from_json_file()-> List[License] | None:
+
+def get_licenses_from_json_file()-> list[JSONSchema] | None:
     try:
+        if JSON_LICENSES_PATH is None:
+            return None
         with open(JSON_LICENSES_PATH, 'r') as file:
             licenses_arr = json.load(file)
-            licenses: List[License] = []
+            licenses: list[JSONSchema] = []
             for item in licenses_arr:
-                new_license = License(**item)
+                new_license = JSONSchema(**item)
                 licenses.append(new_license)
 
             return licenses
@@ -27,12 +29,14 @@ def get_licenses_from_json_file()-> List[License] | None:
         return None
 
 
-def write_licenses_file(licenses: List[License])->bool:
+def write_licenses_file(licenses: list[JSONSchema])->bool:
     try:
         licenses_json = []
         for item in licenses:
             licenses_json.append(item.model_dump())
-            
+        
+        if JSON_LICENSES_PATH is None:
+            return False
         with open(JSON_LICENSES_PATH, "w") as file:
             json.dump(licenses_json, file)
             return True
