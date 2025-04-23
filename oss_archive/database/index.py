@@ -10,9 +10,9 @@ db_url = URL.create(
     drivername="postgresql+psycopg",
     username=DB.get('user'),
     password=DB.get('password'),
-    host=DB['host'],
+    host=DB.get('host'),
     database=DB.get('name'),
-    port=int(str(DB.get('port')))
+    port=DB.get('port')
 )
 
 
