@@ -4,10 +4,10 @@ import os
 ###
 from oss_archive.config import JSON_META_LISTS_PATH
 from oss_archive.utils.logger import logger
-from oss_archive.schemas.meta_list import JSONSchema 
+from oss_archive.schemas.meta_list import  JSONSchema 
 
 
-def get_meta_lists()->list[JSONSchema]:
+def get_meta_lists_from_json_files()->list[JSONSchema]:
     meta_lists : list[JSONSchema] = []
 
     for file in get_meta_lists_files():
