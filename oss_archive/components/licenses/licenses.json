@@ -1,386 +1,338 @@
 [
-    {
-        "api_url": "",
-        "html_url": "",
-        "fullname": "Unknown License for us",
-        "is_seeded": true,
-        "name": "Unknown",
-        "key": "unknown"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/0bsd",
-        "html_url": "https://choosealicense.com/licenses/0bsd",
-        "fullname": "BSD Zero Clause License",
-        "is_seeded": true,
-        "name": "0BSD",
-        "key": "0bsd"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/afl-3.0",
-        "html_url": "https://choosealicense.com/licenses/afl-3.0",
-        "fullname": "Academic Free License v3.0",
-        "is_seeded": true,
-        "name": "AFL-3.0",
-        "key": "afl-3.0"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/agpl-3.0",
-        "html_url": "https://choosealicense.com/licenses/agpl-3.0",
-        "fullname": "GNU Affero General Public License v3.0",
-        "is_seeded": true,
-        "name": "AGPL-3.0",
-        "key": "agpl-3.0"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/apache-2.0",
-        "html_url": "https://choosealicense.com/licenses/apache-2.0",
-        "fullname": "Apache License 2.0",
-        "is_seeded": true,
-        "name": "APACHE-2.0",
-        "key": "apache-2.0"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/artistic-2.0",
-        "html_url": "https://choosealicense.com/licenses/artistic-2.0",
-        "fullname": "Artistic License 2.0",
-        "is_seeded": true,
-        "name": "ARTISTIC-2.0",
-        "key": "artistic-2.0"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/blueoak-1.0.0",
-        "html_url": "https://choosealicense.com/licenses/blueoak-1.0.0",
-        "fullname": "Blue Oak Model License 1.0.0",
-        "is_seeded": true,
-        "name": "BLUEOAK-1.0.0",
-        "key": "blueoak-1.0.0"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/bsd-2-clause-patent",
-        "html_url": "https://choosealicense.com/licenses/bsd-2-clause-patent",
-        "fullname": "BSD-2-Clause Plus Patent License",
-        "is_seeded": true,
-        "name": "BSD-2-CLAUSE-PATENT",
-        "key": "bsd-2-clause-patent"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/bsd-2-clause",
-        "html_url": "https://choosealicense.com/licenses/bsd-2-clause",
-        "fullname": "BSD 2-Clause 'Simplified' License",
-        "is_seeded": true,
-        "name": "BSD-2-CLAUSE",
-        "key": "bsd-2-clause"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/bsd-3-clause-clear",
-        "html_url": "https://choosealicense.com/licenses/bsd-3-clause-clear",
-        "fullname": "BSD 3-Clause Clear License",
-        "is_seeded": true,
-        "name": "BSD-3-CLAUSE-CLEAR",
-        "key": "bsd-3-clause-clear"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/bsd-3-clause",
-        "html_url": "https://choosealicense.com/licenses/bsd-3-clause",
-        "fullname": "BSD 3-Clause 'New' or 'Revised' License",
-        "is_seeded": true,
-        "name": "BSD-3-CLAUSE",
-        "key": "bsd-3-clause"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/bsd-4-clause",
-        "html_url": "https://choosealicense.com/licenses/bsd-4-clause",
-        "fullname": "BSD 4-Clause 'Original' or 'Old' License",
-        "is_seeded": true,
-        "name": "BSD-4-CLAUSE",
-        "key": "bsd-4-clause"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/bsl-1.0",
-        "html_url": "https://choosealicense.com/licenses/bsl-1.0",
-        "fullname": "Boost Software License 1.0",
-        "is_seeded": true,
-        "name": "BSL-1.0",
-        "key": "bsl-1.0"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/cc-by-4.0",
-        "html_url": "https://choosealicense.com/licenses/cc-by-4.0",
-        "fullname": "Creative Commons Attribution 4.0 International",
-        "is_seeded": true,
-        "name": "CC-BY-4.0",
-        "key": "cc-by-4.0"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/cc-by-sa-4.0",
-        "html_url": "https://choosealicense.com/licenses/cc-by-sa-4.0",
-        "fullname": "Creative Commons Attribution Share Alike 4.0 International",
-        "is_seeded": true,
-        "name": "CC-BY-SA-4.0",
-        "key": "cc-by-sa-4.0"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/cc0-1.0",
-        "html_url": "https://choosealicense.com/licenses/cc0-1.0",
-        "fullname": "Creative Commons Zero v1.0 Universal",
-        "is_seeded": true,
-        "name": "CC0-1.0",
-        "key": "cc0-1.0"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/cecill-2.1",
-        "html_url": "https://choosealicense.com/licenses/cecill-2.1",
-        "fullname": "CeCILL Free Software License Agreement v2.1",
-        "is_seeded": true,
-        "name": "CECILL-2.1",
-        "key": "cecill-2.1"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/cern-ohl-p-2.0",
-        "html_url": "https://choosealicense.com/licenses/cern-ohl-p-2.0",
-        "fullname": "CERN Open Hardware Licence Version 2 - Permissive",
-        "is_seeded": true,
-        "name": "CERN-OHL-P-2.0",
-        "key": "cern-ohl-p-2.0"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/cern-ohl-s-2.0",
-        "html_url": "https://choosealicense.com/licenses/cern-ohl-s-2.0",
-        "fullname": "CERN Open Hardware Licence Version 2 - Strongly Reciprocal",
-        "is_seeded": true,
-        "name": "CERN-OHL-S-2.0",
-        "key": "cern-ohl-s-2.0"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/cern-ohl-w-2.0",
-        "html_url": "https://choosealicense.com/licenses/cern-ohl-w-2.0",
-        "fullname": "CERN Open Hardware Licence Version 2 - Weakly Reciprocal",
-        "is_seeded": true,
-        "name": "CERN-OHL-W-2.0",
-        "key": "cern-ohl-w-2.0"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/ecl-2.0",
-        "html_url": "https://choosealicense.com/licenses/ecl-2.0",
-        "fullname": "Educational Community License v2.0",
-        "is_seeded": true,
-        "name": "ECL-2.0",
-        "key": "ecl-2.0"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/epl-1.0",
-        "html_url": "https://choosealicense.com/licenses/epl-1.0",
-        "fullname": "Eclipse Public License 1.0",
-        "is_seeded": true,
-        "name": "EPL-1.0",
-        "key": "epl-1.0"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/epl-2.0",
-        "html_url": "https://choosealicense.com/licenses/epl-2.0",
-        "fullname": "Eclipse Public License 2.0",
-        "is_seeded": true,
-        "name": "EPL-2.0",
-        "key": "epl-2.0"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/eupl-1.1",
-        "html_url": "https://choosealicense.com/licenses/eupl-1.1",
-        "fullname": "European Union Public License 1.1",
-        "is_seeded": true,
-        "name": "EUPL-1.1",
-        "key": "eupl-1.1"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/eupl-1.2",
-        "html_url": "https://choosealicense.com/licenses/eupl-1.2",
-        "fullname": "European Union Public License 1.2",
-        "is_seeded": true,
-        "name": "EUPL-1.2",
-        "key": "eupl-1.2"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/gfdl-1.3",
-        "html_url": "https://choosealicense.com/licenses/gfdl-1.3",
-        "fullname": "GNU Free Documentation License v1.3",
-        "is_seeded": true,
-        "name": "GFDL-1.3",
-        "key": "gfdl-1.3"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/gpl-2.0",
-        "html_url": "https://choosealicense.com/licenses/gpl-2.0",
-        "fullname": "GNU General Public License v2.0",
-        "is_seeded": true,
-        "name": "GPL-2.0",
-        "key": "gpl-2.0"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/gpl-3.0",
-        "html_url": "https://choosealicense.com/licenses/gpl-3.0",
-        "fullname": "GNU General Public License v3.0",
-        "is_seeded": true,
-        "name": "GPL-3.0",
-        "key": "gpl-3.0"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/isc",
-        "html_url": "https://choosealicense.com/licenses/isc",
-        "fullname": "ISC License",
-        "is_seeded": true,
-        "name": "ISC",
-        "key": "isc"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/lgpl-2.1",
-        "html_url": "https://choosealicense.com/licenses/lgpl-2.1",
-        "fullname": "GNU Lesser General Public License v2.1",
-        "is_seeded": true,
-        "name": "LGPL-2.1",
-        "key": "lgpl-2.1"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/lgpl-3.0",
-        "html_url": "https://choosealicense.com/licenses/lgpl-3.0",
-        "fullname": "GNU Lesser General Public License v3.0",
-        "is_seeded": true,
-        "name": "LGPL-3.0",
-        "key": "lgpl-3.0"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/lppl-1.3c",
-        "html_url": "https://choosealicense.com/licenses/lppl-1.3c",
-        "fullname": "LaTeX Project Public License v1.3c",
-        "is_seeded": true,
-        "name": "LPPL-1.3C",
-        "key": "lppl-1.3c"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/mit-0",
-        "html_url": "https://choosealicense.com/licenses/mit-0",
-        "fullname": "MIT No Attribution",
-        "is_seeded": true,
-        "name": "MIT-0",
-        "key": "mit-0"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/mit",
-        "html_url": "https://choosealicense.com/licenses/mit",
-        "fullname": "MIT License",
-        "is_seeded": true,
-        "name": "MIT",
-        "key": "mit"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/mpl-2.0",
-        "html_url": "https://choosealicense.com/licenses/mpl-2.0",
-        "fullname": "Mozilla Public License 2.0",
-        "is_seeded": true,
-        "name": "MPL-2.0",
-        "key": "mpl-2.0"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/ms-pl",
-        "html_url": "https://choosealicense.com/licenses/ms-pl",
-        "fullname": "Microsoft Public License",
-        "is_seeded": true,
-        "name": "MS-PL",
-        "key": "ms-pl"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/ms-rl",
-        "html_url": "https://choosealicense.com/licenses/ms-rl",
-        "fullname": "Microsoft Reciprocal License",
-        "is_seeded": true,
-        "name": "MS-RL",
-        "key": "ms-rl"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/mulanpsl-2.0",
-        "html_url": "https://choosealicense.com/licenses/mulanpsl-2.0",
-        "fullname": "Mulan Permissive Software License, Version 2",
-        "is_seeded": true,
-        "name": "MULANPSL-2.0",
-        "key": "mulanpsl-2.0"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/ncsa",
-        "html_url": "https://choosealicense.com/licenses/ncsa",
-        "fullname": "University of Illinois/NCSA Open Source Licens",
-        "is_seeded": true,
-        "name": "NCSA",
-        "key": "ncsa"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/odbl-1.0",
-        "html_url": "https://choosealicense.com/licenses/odbl-1.0",
-        "fullname": "Open Data Commons Open Database License v1.0",
-        "is_seeded": true,
-        "name": "ODBL-1.0",
-        "key": "odbl-1.0"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/ofl-1.1",
-        "html_url": "https://choosealicense.com/licenses/ofl-1.1",
-        "fullname": "SIL Open Font License 1.1",
-        "is_seeded": true,
-        "name": "OFL-1.1",
-        "key": "ofl-1.1"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/osl-3.0",
-        "html_url": "https://choosealicense.com/licenses/osl-3.0",
-        "fullname": "Open Software License 3.0",
-        "is_seeded": true,
-        "name": "OSL-3.0",
-        "key": "osl-3.0"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/postgresql",
-        "html_url": "https://choosealicense.com/licenses/postgresql",
-        "fullname": "PostgreSQL License",
-        "is_seeded": true,
-        "name": "POSTGRESQL",
-        "key": "postgresql"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/unlicense",
-        "html_url": "https://choosealicense.com/licenses/unlicense",
-        "fullname": "The Unlicense",
-        "is_seeded": true,
-        "name": "UNLICENSE",
-        "key": "unlicense"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/upl-1.0",
-        "html_url": "https://choosealicense.com/licenses/upl-1.0",
-        "fullname": "Universal Permissive License v1.0",
-        "is_seeded": true,
-        "name": "UPL-1.0",
-        "key": "upl-1.0"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/vim",
-        "html_url": "https://choosealicense.com/licenses/vim",
-        "fullname": "Vim License",
-        "is_seeded": true,
-        "name": "VIM",
-        "key": "vim"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/wtfpl",
-        "html_url": "https://choosealicense.com/licenses/wtfpl",
-        "fullname": "Do What The F*ck You Want To Public License",
-        "is_seeded": true,
-        "name": "WTFPL",
-        "key": "wtfpl"
-    },
-    {
-        "api_url": "https://api.github.com/licenses/zlib",
-        "html_url": "https://choosealicense.com/licenses/zlib",
-        "fullname": "zlib License",
-        "is_seeded": true,
-        "name": "ZLIB",
-        "key": "zlib"
-    }
+  {
+    "api_url": "",
+    "html_url": "",
+    "fullname": "Unknown License for us",
+    "name": "Unknown",
+    "key": "unknown"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/0bsd",
+    "html_url": "https://choosealicense.com/licenses/0bsd",
+    "fullname": "BSD Zero Clause License",
+    "name": "0BSD",
+    "key": "0bsd"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/afl-3.0",
+    "html_url": "https://choosealicense.com/licenses/afl-3.0",
+    "fullname": "Academic Free License v3.0",
+    "name": "AFL-3.0",
+    "key": "afl-3.0"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/agpl-3.0",
+    "html_url": "https://choosealicense.com/licenses/agpl-3.0",
+    "fullname": "GNU Affero General Public License v3.0",
+    "name": "AGPL-3.0",
+    "key": "agpl-3.0"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/apache-2.0",
+    "html_url": "https://choosealicense.com/licenses/apache-2.0",
+    "fullname": "Apache License 2.0",
+    "name": "APACHE-2.0",
+    "key": "apache-2.0"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/artistic-2.0",
+    "html_url": "https://choosealicense.com/licenses/artistic-2.0",
+    "fullname": "Artistic License 2.0",
+    "name": "ARTISTIC-2.0",
+    "key": "artistic-2.0"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/blueoak-1.0.0",
+    "html_url": "https://choosealicense.com/licenses/blueoak-1.0.0",
+    "fullname": "Blue Oak Model License 1.0.0",
+    "name": "BLUEOAK-1.0.0",
+    "key": "blueoak-1.0.0"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/bsd-2-clause-patent",
+    "html_url": "https://choosealicense.com/licenses/bsd-2-clause-patent",
+    "fullname": "BSD-2-Clause Plus Patent License",
+    "name": "BSD-2-CLAUSE-PATENT",
+    "key": "bsd-2-clause-patent"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/bsd-2-clause",
+    "html_url": "https://choosealicense.com/licenses/bsd-2-clause",
+    "fullname": "BSD 2-Clause 'Simplified' License",
+    "name": "BSD-2-CLAUSE",
+    "key": "bsd-2-clause"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/bsd-3-clause-clear",
+    "html_url": "https://choosealicense.com/licenses/bsd-3-clause-clear",
+    "fullname": "BSD 3-Clause Clear License",
+    "name": "BSD-3-CLAUSE-CLEAR",
+    "key": "bsd-3-clause-clear"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/bsd-3-clause",
+    "html_url": "https://choosealicense.com/licenses/bsd-3-clause",
+    "fullname": "BSD 3-Clause 'New' or 'Revised' License",
+    "name": "BSD-3-CLAUSE",
+    "key": "bsd-3-clause"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/bsd-4-clause",
+    "html_url": "https://choosealicense.com/licenses/bsd-4-clause",
+    "fullname": "BSD 4-Clause 'Original' or 'Old' License",
+    "name": "BSD-4-CLAUSE",
+    "key": "bsd-4-clause"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/bsl-1.0",
+    "html_url": "https://choosealicense.com/licenses/bsl-1.0",
+    "fullname": "Boost Software License 1.0",
+    "name": "BSL-1.0",
+    "key": "bsl-1.0"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/cc-by-4.0",
+    "html_url": "https://choosealicense.com/licenses/cc-by-4.0",
+    "fullname": "Creative Commons Attribution 4.0 International",
+    "name": "CC-BY-4.0",
+    "key": "cc-by-4.0"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/cc-by-sa-4.0",
+    "html_url": "https://choosealicense.com/licenses/cc-by-sa-4.0",
+    "fullname": "Creative Commons Attribution Share Alike 4.0 International",
+    "name": "CC-BY-SA-4.0",
+    "key": "cc-by-sa-4.0"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/cc0-1.0",
+    "html_url": "https://choosealicense.com/licenses/cc0-1.0",
+    "fullname": "Creative Commons Zero v1.0 Universal",
+    "name": "CC0-1.0",
+    "key": "cc0-1.0"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/cecill-2.1",
+    "html_url": "https://choosealicense.com/licenses/cecill-2.1",
+    "fullname": "CeCILL Free Software License Agreement v2.1",
+    "name": "CECILL-2.1",
+    "key": "cecill-2.1"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/cern-ohl-p-2.0",
+    "html_url": "https://choosealicense.com/licenses/cern-ohl-p-2.0",
+    "fullname": "CERN Open Hardware Licence Version 2 - Permissive",
+    "name": "CERN-OHL-P-2.0",
+    "key": "cern-ohl-p-2.0"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/cern-ohl-s-2.0",
+    "html_url": "https://choosealicense.com/licenses/cern-ohl-s-2.0",
+    "fullname": "CERN Open Hardware Licence Version 2 - Strongly Reciprocal",
+    "name": "CERN-OHL-S-2.0",
+    "key": "cern-ohl-s-2.0"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/cern-ohl-w-2.0",
+    "html_url": "https://choosealicense.com/licenses/cern-ohl-w-2.0",
+    "fullname": "CERN Open Hardware Licence Version 2 - Weakly Reciprocal",
+    "name": "CERN-OHL-W-2.0",
+    "key": "cern-ohl-w-2.0"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/ecl-2.0",
+    "html_url": "https://choosealicense.com/licenses/ecl-2.0",
+    "fullname": "Educational Community License v2.0",
+    "name": "ECL-2.0",
+    "key": "ecl-2.0"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/epl-1.0",
+    "html_url": "https://choosealicense.com/licenses/epl-1.0",
+    "fullname": "Eclipse Public License 1.0",
+    "name": "EPL-1.0",
+    "key": "epl-1.0"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/epl-2.0",
+    "html_url": "https://choosealicense.com/licenses/epl-2.0",
+    "fullname": "Eclipse Public License 2.0",
+    "name": "EPL-2.0",
+    "key": "epl-2.0"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/eupl-1.1",
+    "html_url": "https://choosealicense.com/licenses/eupl-1.1",
+    "fullname": "European Union Public License 1.1",
+    "name": "EUPL-1.1",
+    "key": "eupl-1.1"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/eupl-1.2",
+    "html_url": "https://choosealicense.com/licenses/eupl-1.2",
+    "fullname": "European Union Public License 1.2",
+    "name": "EUPL-1.2",
+    "key": "eupl-1.2"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/gfdl-1.3",
+    "html_url": "https://choosealicense.com/licenses/gfdl-1.3",
+    "fullname": "GNU Free Documentation License v1.3",
+    "name": "GFDL-1.3",
+    "key": "gfdl-1.3"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/gpl-2.0",
+    "html_url": "https://choosealicense.com/licenses/gpl-2.0",
+    "fullname": "GNU General Public License v2.0",
+    "name": "GPL-2.0",
+    "key": "gpl-2.0"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/gpl-3.0",
+    "html_url": "https://choosealicense.com/licenses/gpl-3.0",
+    "fullname": "GNU General Public License v3.0",
+    "name": "GPL-3.0",
+    "key": "gpl-3.0"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/isc",
+    "html_url": "https://choosealicense.com/licenses/isc",
+    "fullname": "ISC License",
+    "name": "ISC",
+    "key": "isc"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/lgpl-2.1",
+    "html_url": "https://choosealicense.com/licenses/lgpl-2.1",
+    "fullname": "GNU Lesser General Public License v2.1",
+    "name": "LGPL-2.1",
+    "key": "lgpl-2.1"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/lgpl-3.0",
+    "html_url": "https://choosealicense.com/licenses/lgpl-3.0",
+    "fullname": "GNU Lesser General Public License v3.0",
+    "name": "LGPL-3.0",
+    "key": "lgpl-3.0"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/lppl-1.3c",
+    "html_url": "https://choosealicense.com/licenses/lppl-1.3c",
+    "fullname": "LaTeX Project Public License v1.3c",
+    "name": "LPPL-1.3C",
+    "key": "lppl-1.3c"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/mit-0",
+    "html_url": "https://choosealicense.com/licenses/mit-0",
+    "fullname": "MIT No Attribution",
+    "name": "MIT-0",
+    "key": "mit-0"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/mit",
+    "html_url": "https://choosealicense.com/licenses/mit",
+    "fullname": "MIT License",
+    "name": "MIT",
+    "key": "mit"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/mpl-2.0",
+    "html_url": "https://choosealicense.com/licenses/mpl-2.0",
+    "fullname": "Mozilla Public License 2.0",
+    "name": "MPL-2.0",
+    "key": "mpl-2.0"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/ms-pl",
+    "html_url": "https://choosealicense.com/licenses/ms-pl",
+    "fullname": "Microsoft Public License",
+    "name": "MS-PL",
+    "key": "ms-pl"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/ms-rl",
+    "html_url": "https://choosealicense.com/licenses/ms-rl",
+    "fullname": "Microsoft Reciprocal License",
+    "name": "MS-RL",
+    "key": "ms-rl"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/mulanpsl-2.0",
+    "html_url": "https://choosealicense.com/licenses/mulanpsl-2.0",
+    "fullname": "Mulan Permissive Software License, Version 2",
+    "name": "MULANPSL-2.0",
+    "key": "mulanpsl-2.0"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/ncsa",
+    "html_url": "https://choosealicense.com/licenses/ncsa",
+    "fullname": "University of Illinois/NCSA Open Source License",
+    "name": "NCSA",
+    "key": "ncsa"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/odbl-1.0",
+    "html_url": "https://choosealicense.com/licenses/odbl-1.0",
+    "fullname": "Open Data Commons Open Database License v1.0",
+    "name": "ODBL-1.0",
+    "key": "odbl-1.0"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/ofl-1.1",
+    "html_url": "https://choosealicense.com/licenses/ofl-1.1",
+    "fullname": "SIL Open Font License 1.1",
+    "name": "OFL-1.1",
+    "key": "ofl-1.1"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/osl-3.0",
+    "html_url": "https://choosealicense.com/licenses/osl-3.0",
+    "fullname": "Open Software License 3.0",
+    "name": "OSL-3.0",
+    "key": "osl-3.0"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/postgresql",
+    "html_url": "https://choosealicense.com/licenses/postgresql",
+    "fullname": "PostgreSQL License",
+    "name": "POSTGRESQL",
+    "key": "postgresql"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/unlicense",
+    "html_url": "https://choosealicense.com/licenses/unlicense",
+    "fullname": "The Unlicense",
+    "name": "UNLICENSE",
+    "key": "unlicense"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/upl-1.0",
+    "html_url": "https://choosealicense.com/licenses/upl-1.0",
+    "fullname": "Universal Permissive License v1.0",
+    "name": "UPL-1.0",
+    "key": "upl-1.0"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/vim",
+    "html_url": "https://choosealicense.com/licenses/vim",
+    "fullname": "Vim License",
+    "name": "VIM",
+    "key": "vim"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/wtfpl",
+    "html_url": "https://choosealicense.com/licenses/wtfpl",
+    "fullname": "Do What The F*ck You Want To Public License",
+    "name": "WTFPL",
+    "key": "wtfpl"
+  },
+  {
+    "api_url": "https://api.github.com/licenses/zlib",
+    "html_url": "https://choosealicense.com/licenses/zlib",
+    "fullname": "zlib License",
+    "name": "ZLIB",
+    "key": "zlib"
+  }
 ]
