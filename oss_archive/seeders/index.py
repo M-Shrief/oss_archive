@@ -15,8 +15,10 @@ from oss_archive.schemas import meta_list as MetaListSchemas, meta_item as MetaI
 from oss_archive.components.meta_lists.json import get_meta_lists_from_json_files
 from oss_archive.components.licenses.json import get_licenses_from_json_file
 # Seeders' sources and helplers
-# from oss_archive.seeders.sources import github
-from oss_archive.seeders.helpers import does_license_exists, does_meta_list_exists, does_meta_item_exists, does_oss_exists
+from oss_archive.seeders.sources import codeberg
+from oss_archive.seeders.helpers import does_license_exists, does_meta_list_exists, get_all_meta_items, get_all_meta_lists
+
+
 class SeedResults(TypedDict):
     is_meta_lists_seeded: bool
     is_meta_items_seeded: bool
@@ -31,12 +33,60 @@ def seed(db: Session):
         # 4 - Seed MetaItem's Open-Source Softwares one by one
 
         seed_licenses(db)
-        
+        seed_meta_lists(db)
     except Exception as e:
         logger.error("Error in seed's operations",  error=e)
         return SeedResults(is_meta_lists_seeded=False, is_meta_items_seeded=False, is_ossoftwares_seeded=False, is_licenses_seeded=False)
 
 
+def seed_meta_lists(db: Session):
+    meta_lists: list[MetaListSchemas.JSONSchema] = get_meta_lists_from_json_files()
+    for meta_list in meta_lists:
+        # Seed JSON MetaList's metadata as a MetaListModel  
+        seeded_meta_list = seed_meta_list(meta_list, db)
+        if seeded_meta_list is None:
+            continue
+        # Seed JSON MetaList's items as MetaItemModel
+        # for meta_item in meta_list.items:
+            # _ = seed_meta_item(meta_item)
+
+def seed_meta_list(meta_list: MetaListSchemas.JSONSchema, db: Session)->MetaListModel | None:
+    """Seed Meta list from the meta list's metadata in its json file"""
+    try:
+        ### Used 2 different conditions block to differntiate the logs.
+        if not meta_list.reviewed:
+            logger.info(f"Skipped {meta_list.key}'s meta list, because it's not reviewed")
+            return None
+
+        meta_list_does_exists = does_meta_list_exists(meta_list.key, db)
+        if meta_list_does_exists:
+            logger.info(f"Skipped {meta_list.key}'s meta list, because it's already seeded")
+            return None
+
+        new_meta_list = MetaListModel()
+        new_meta_list.key = meta_list.key
+        new_meta_list.name = meta_list.name
+        new_meta_list.tags = meta_list.tags
+        new_meta_list.priority = meta_list.priority
+        new_meta_list.reviewed = meta_list.reviewed
+
+
+        db.add(new_meta_list)
+        db.commit()
+        return new_meta_list        
+
+    except errors.UniqueViolation as e:
+        db.rollback()
+        logger.error(f"Error Inserting meta_list for Unique key Violation, using {meta_list.key} meta_list", meta_list=meta_list, error=e)
+        return None
+    except errors.CheckViolation as e:
+        db.rollback()
+        logger.error(f"Error Inserting meta_list for check Violation, using {meta_list.key} meta_list", meta_list=meta_list, error=e)
+        return None
+    except Exception as e: ## need effective error handling here
+        db.rollback()
+        logger.error(f"Unknown Error when Inserting meta_list, using {meta_list.key} meta_list", meta_list=meta_list, error=e)
+        return None
 
 def seed_licenses(db: Session):
     """Seed Licenses from its JSON file"""
