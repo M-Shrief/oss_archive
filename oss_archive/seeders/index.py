@@ -15,7 +15,7 @@ from oss_archive.schemas import meta_list as MetaListSchemas, meta_item as MetaI
 from oss_archive.components.meta_lists.json import get_meta_lists_from_json_files
 from oss_archive.components.licenses.json import get_licenses_from_json_file
 # Seeders' sources and helplers
-from oss_archive.seeders.sources import codeberg
+from oss_archive.seeders.sources import codeberg, github
 from oss_archive.seeders.helpers import does_license_exists, does_meta_list_exists, get_all_meta_items, get_all_meta_lists
 
 
@@ -97,6 +97,11 @@ def seed_meta_items(db: Session):
         meta_list_does_exists = does_meta_list_exists(meta_list.key, db)
         if not meta_list_does_exists:
             continue
+        
+        # # Limit meta_items seeded while testing.
+        # if meta_list.key not in ["internet", "ai"]:
+        #     continue 
+
         for item in meta_list.items:
             _ = seed_meta_item_from_source(meta_list_key=meta_list.key, meta_item=item, db=db)
     return
@@ -105,9 +110,7 @@ def seed_meta_items(db: Session):
 def seed_meta_item_from_source(meta_list_key: str, meta_item: MetaItemSchemas.JSONSchema, db: Session) -> MetaItemModel | None: #-> Owner:
     match meta_item.source:
         case "github":
-            # return github.seed_meta_item(meta_list_key, meta_item, db)
-            logger.error("Github OSS source", meta_list_key=meta_list_key, meta_item_owner_username=meta_item.owner_username)
-            return None
+            return github.seed_meta_item(meta_list_key, meta_item, db)
         case "codeberg":
             return codeberg.seed_meta_item(meta_list_key, meta_item, db)
         # Defualt None value for unknown sources.
