@@ -34,6 +34,7 @@ def seed(db: Session):
 
         seed_licenses(db)
         seed_meta_lists(db)
+        seed_meta_items(db)
     except Exception as e:
         logger.error("Error in seed's operations",  error=e)
         return SeedResults(is_meta_lists_seeded=False, is_meta_items_seeded=False, is_ossoftwares_seeded=False, is_licenses_seeded=False)
@@ -87,6 +88,31 @@ def seed_meta_list(meta_list: MetaListSchemas.JSONSchema, db: Session)->MetaList
         db.rollback()
         logger.error(f"Unknown Error when Inserting meta_list, using {meta_list.key} meta_list", meta_list=meta_list, error=e)
         return None
+
+def seed_meta_items(db: Session):
+    meta_lists = get_meta_lists_from_json_files()
+    
+    for meta_list in meta_lists:
+        meta_list_does_exists = does_meta_list_exists(meta_list.key, db)
+        if not meta_list_does_exists:
+            continue
+        for item in meta_list.items:
+            _ = seed_meta_item_from_source(meta_list_key=meta_list.key, meta_item=item, db=db)
+    return
+
+
+def seed_meta_item_from_source(meta_list_key: str, meta_item: MetaItemSchemas.JSONSchema, db: Session) -> MetaItemModel | None: #-> Owner:
+    match meta_item.source:
+        case "github":
+            # return github.seed_meta_item(meta_list_key, meta_item, db)
+            logger.error("Github OSS source", meta_list_key=meta_list_key, meta_item_owner_username=meta_item.owner_username)
+            return None
+        case "codeberg":
+            return codeberg.seed_meta_item(meta_list_key, meta_item, db)
+        # Defualt None value for unknown sources.
+        case _:
+            logger.error("Unkown OSS source", meta_list_key=meta_list_key, meta_item_owner_username=meta_item.owner_username)
+            return None
 
 def seed_licenses(db: Session):
     """Seed Licenses from its JSON file"""
