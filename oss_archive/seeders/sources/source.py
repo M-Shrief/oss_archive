@@ -55,23 +55,21 @@ def seed_meta_item(meta_list_key: str, meta_item: MetaItemSchemas.JSONSchema, db
         return None
 
 def get_meta_item_from_source(meta_list_key: str, meta_item: MetaItemSchemas.JSONSchema)-> MetaItemModel | None:
-    """Get the Individual's data from {source} API and return it as an Owner Model"""
+    """Get the Organization/Individual's data from {source} API and return it as an Owner Model"""
 
-    res_dict: dict[str, Any] = {}
     match meta_item.owner_type:
         case OwnerType.Organization:
             res = get(url=f"{API_BASE_URL}/orgs/{meta_item.owner_username}")    
-            if res.status_code != 200:
-                return None
-            res_dict = res.json()
-
         # As I can access Organizations' data only, so I use the default case: _, to handle any case in the future when edit the OwnerType
         case OwnerType.Individual:
-            pass
-        # case _:
-        #     logger.error(f"Unknown Owner type: {meta_item.owner_type}")
-        #     return None
+            res = get(url=f"{API_BASE_URL}/users/{meta_item.owner_username}")    
+        case _:
+            logger.error(f"Unknown Owner type: {meta_item.owner_type}")
+            return None
 
+    if res.status_code != 200:
+        return None
+    res_dict = res.json()
     new_meta_item = get_new_meta_item(meta_list_key, meta_item, res_dict)
     return new_meta_item
 
@@ -130,34 +128,30 @@ def seed_oss(meta_item: MetaItemModel, repo_dict: dict[str, Any], db: Session):
         return new_oss
     except errors.UniqueViolation as e:
         db.rollback()
-        logger.error(f"Error Inserting OSS for Unique key Violation OSS from {meta_item.owner_type} meta item", meta_item_owner_username=meta_item.owner_username, repo=repo_dict, error=e)
+        logger.error(f"Error Inserting OSS for Unique key Violation OSS from {meta_item.owner_type} meta item", meta_item_owner_username=meta_item.owner_username, error=e)
         return None
     except errors.CheckViolation as e:
         db.rollback()
-        logger.error(f"Error Inserting OSS for check Violation OSS from {meta_item.owner_type} meta item", meta_item_owner_username=meta_item.owner_username, repo=repo_dict, error=e)
+        logger.error(f"Error Inserting OSS for check Violation OSS from {meta_item.owner_type} meta item", meta_item_owner_username=meta_item.owner_username, error=e)
         return None
     except Exception as e:
         db.rollback()
-        logger.error(f"Unknown Error when Inserting OSS from {meta_item.owner_type} meta item", meta_item_owner_username=meta_item.owner_username, repo=repo_dict, error=e)
+        logger.error(f"Unknown Error when Inserting OSS from {meta_item.owner_type} meta item", meta_item_owner_username=meta_item.owner_username, error=e)
         return None
 
 def get_repos_from_source(meta_item: MetaItemModel):
-    res_arr: list[dict[str, Any]] = []
-    ### Get all repos
     match meta_item.owner_type:
         case OwnerType.Organization:
             res = get(url=f"{API_BASE_URL}/orgs/{meta_item.owner_username}/repos")    
-            if res.status_code != 200:
-                return None
-            res_arr = res.json()
-        # As I can access Organizations' data only, so I use the default case: _, to handle any case in the future when edit the OwnerType
-        # case OwnerType.Individual:
-            # logger.error("Can't get Individual data without authentication token")
-            # return None
+        case OwnerType.Individual:
+            res = get(url=f"{API_BASE_URL}/users/{meta_item.owner_username}/repos")    
         case _:
-            logger.error("Can't get Individual's data without authentication token")
+            logger.error(f"Uknown OwnerType: {meta_item.owner_type}")
             return None
 
+    if res.status_code != 200:
+        return None
+    res_arr: list[dict[str, Any]] = res.json()
     return res_arr
 
 
