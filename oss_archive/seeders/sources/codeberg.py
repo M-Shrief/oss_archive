@@ -105,3 +105,105 @@ def get_new_meta_item(meta_list_key: str, meta_item: MetaItemSchemas.JSONSchema,
         logger.error("Unknown error parsing github API for owners' details", error=e)
         return None
 
+
+def seed_os_softwares(meta_item: MetaItemModel, db: Session) -> list[OSSoftwareModel] | None:
+    repos_arr = get_repos_from_source(meta_item)
+    if repos_arr is None:
+        return None
+
+    new_os_softwares: list[OSSoftwareModel] = []
+    for repo in repos_arr:
+        should_apply_on = should_apply_action_on_oss(meta_item, repo)
+        if not should_apply_on:
+            continue
+
+        seeded_oss = seed_oss(meta_item, repo, db)
+        if seeded_oss is None:
+            continue
+
+        new_os_softwares.append(seeded_oss)
+
+    return new_os_softwares
+
+def seed_oss(meta_item: MetaItemModel, repo_dict: dict[str, Any], db: Session):
+    try:
+        repo_name = repo_dict.get("name")
+        if repo_name is None:
+            return None
+        oss_fullname = format_repo_fullname(meta_item.owner_username, repo_name)
+
+        oss_does_exists = does_oss_exists(oss_fullname, db)
+        if oss_does_exists:
+            return None
+
+        new_oss = get_new_oss(meta_item, repo_dict)
+        if new_oss is None:
+            return None
+        
+        db.add(new_oss)
+        db.commit()
+        
+        return new_oss
+    except errors.UniqueViolation as e:
+        db.rollback()
+        logger.error(f"Error Inserting OSS for Unique key Violation OSS from {meta_item.owner_type} meta item", meta_item_owner_username=meta_item.owner_username, repo=repo_dict, error=e)
+        return None
+    except errors.CheckViolation as e:
+        db.rollback()
+        logger.error(f"Error Inserting OSS for check Violation OSS from {meta_item.owner_type} meta item", meta_item_owner_username=meta_item.owner_username, repo=repo_dict, error=e)
+        return None
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Unknown Error when Inserting OSS from {meta_item.owner_type} meta item", meta_item_owner_username=meta_item.owner_username, repo=repo_dict, error=e)
+        return None
+
+def get_repos_from_source(meta_item: MetaItemModel):
+    res_arr: list[dict[str, Any]] = []
+    ### Get all repos
+    match meta_item.owner_type:
+        case OwnerType.Organization:
+            res = get(url=f"{API_BASE_URL}/orgs/{meta_item.owner_username}/repos")    
+            if res.status_code != 200:
+                return None
+            res_arr = res.json()
+        # As I can access Organizations' data only, so I use the default case: _, to handle any case in the future when edit the OwnerType
+        # case OwnerType.Individual:
+            # logger.error("Can't get Individual data without authentication token")
+            # return None
+        case _:
+            logger.error("Can't get Individual's data without authentication token")
+            return None
+
+    return res_arr
+
+
+def get_new_oss(meta_item: MetaItemModel, repo_dict: dict[str, Any]) -> OSSoftwareModel | None: # pyright:ignore[reportExplicitAny]
+    """Get the needed data from Codeberg API response - an item from repos array - to create a OSS model."""
+    try:
+        oss = OSSoftwareModel()
+        oss.name = repo_dict.get("name") # pyright:ignore[reportAttributeAccessIssue]
+        oss.fullname = format_repo_fullname(meta_item.owner_username, oss.name)
+        oss.description = repo_dict.get("description")
+        oss.topics = repo_dict.get("topics") # pyright:ignore[reportAttributeAccessIssue]
+        oss.html_url = repo_dict.get("html_url")
+        oss.clone_url = repo_dict.get("clone_url")
+        oss.created_at_source = repo_dict.get("created_at") 
+        oss.updated_at_source = repo_dict.get("updated_at")
+
+        # Relations
+        oss.meta_list_key = meta_item.meta_list_key
+        oss.meta_item_id = meta_item.id
+        ### Codeberg API doesn't return the OSS's license, so we need another way to extract it.
+        # if api_repo_res["license"] is not None:
+        #     oss.license_key = api_repo_res["license"]["key"]
+
+        return oss
+
+    except KeyError as e:
+        logger.error("owner's repo data keys have changed, so there was an error converting it to an OSS model", error=e)
+        return None
+
+    except Exception as e:
+        logger.error("Unknown error parsing github API for owners' details", error=e)
+        return None
+
