@@ -132,9 +132,7 @@ def seed_os_softwares(db: Session):
 def seed_os_softwares_from_source(meta_item: MetaItemModel, db: Session): #-> Owner:
     match meta_item.source:
         case "github":
-            # return github.seed_meta_item(meta_list_key, meta_item, db)
-            logger.error("Github OSS source", meta_item_owner_username=meta_item.owner_username)
-            return None
+            return github.seed_os_softwares(meta_item, db)
         case "codeberg":
             return codeberg.seed_os_softwares(meta_item, db)
         # Defualt None value for unknown sources.
