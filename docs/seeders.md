@@ -6,7 +6,8 @@ There's mutliple ways to have fast speed in this initial seed operation, but mor
 
 Rules:
 - JSON files that we use to keep track of Meta Lists and Meta Items **shouldn't be modified**, and the don't require cleaning.
-- Seedig the MetaItem and its related open-source software is decoupled from each other and shouldn't be seeded together.
+- All seeding operation should be decoupled from other seed operations, and we'll limit the use of metadata when seeding. And Especially the seeding operation for MetaItem and its related open-source software is decoupled from each other and shouldn't be seeded together.
+    - For instance seeded_repos && not_seeded_repos fields in meta_item will be deleted, because we don't need it in seed operations as we don't want to couple the meta_item with os_software seeding operation. As we don't want to update meta_item's fields every time we add/delete a new OSS.
     - And we don't use the meta_item's JSON data when seeding its OSSs but we query the meta_item's data from the Database. 
 
 Overview of the flow:
