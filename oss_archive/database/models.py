@@ -57,10 +57,6 @@ class MetaItem(PriorityField, Base):
     owner_created_at: Mapped[datetime | None] = mapped_column(DateTime(), nullable=True) # The Date the owner signed up for the other platform (github, gitlab...etc)
     owner_updated_at: Mapped[datetime | None] = mapped_column(DateTime(), nullable=True) # the last time the owner's data was updated in the source
 
-    # metadata about the repos, exist only in the database
-    seeded_repos: Mapped[list[str]] = mapped_column(ARRAY(String(128)), default=[])
-    not_seeded_repos: Mapped[list[str]] = mapped_column(ARRAY(String(128)), default=[])
-
     # Entity Timestamps
     created_at: Mapped[datetime] = mapped_column(DateTime(), server_default=text("CURRENT_TIMESTAMP"))
     updated_at: Mapped[datetime] = mapped_column(DateTime(), server_default=text("CURRENT_TIMESTAMP"), onupdate=text("CURRENT_TIMESTAMP"))
@@ -90,7 +86,7 @@ class OSSoftware(Base):
 
     # Metadata about the archived oss
     is_archived: Mapped[bool] = mapped_column(Boolean(), default=False) # did we archive it?
-    date_of_archive: Mapped[datetime | None] = mapped_column(DateTime(), nullable=False)  # The date of the archived version = OSS's last commit date. 
+    date_of_archive: Mapped[datetime | None] = mapped_column(DateTime(), nullable=True)  # The date of the archived version = OSS's last commit date. 
 
     # Entity Timestamps
     created_at: Mapped[datetime] = mapped_column(DateTime(), server_default=text("CURRENT_TIMESTAMP"))
@@ -100,7 +96,7 @@ class OSSoftware(Base):
     meta_list_key: Mapped[str] = mapped_column(ForeignKey("meta_lists.key"), nullable=False)
     meta_list: Mapped["MetaList"] = relationship(back_populates="os_softwares")
 
-    meta_item_id: Mapped[str] = mapped_column(ForeignKey("meta_items.id"), nullable=False)
+    meta_item_id: Mapped[UUID] = mapped_column(ForeignKey("meta_items.id"), nullable=False)
     meta_item: Mapped["MetaItem"] = relationship(back_populates="os_softwares")
 
     license_key: Mapped[str] = mapped_column(ForeignKey("licenses.key"), default="unknown")
