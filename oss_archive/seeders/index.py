@@ -1,22 +1,20 @@
-from typing import Annotated, TypedDict
-from sqlalchemy.orm import Session, load_only
-from sqlalchemy import select, delete, update
-from sqlalchemy import exc 
+from typing import TypedDict
+from sqlalchemy.orm import Session
 from psycopg import errors
 from time import sleep
 ###
 from oss_archive.config import ENV
 from oss_archive.utils.logger import logger
 # Database
-from oss_archive.database.models import MetaList as MetaListModel, MetaItem as MetaItemModel, License, OSSoftware
+from oss_archive.database.models import MetaList as MetaListModel, MetaItem as MetaItemModel, License
 # Schemas
-from oss_archive.schemas import meta_list as MetaListSchemas, meta_item as MetaItemSchemas, os_software as OSSSchemas, license as LicenseSchemas
+from oss_archive.schemas import meta_list as MetaListSchemas, meta_item as MetaItemSchemas, license as LicenseSchemas
 # JSON
 from oss_archive.components.meta_lists.json import get_meta_lists_from_json_files
 from oss_archive.components.licenses.json import get_licenses_from_json_file
 # Seeders' sources and helplers
 from oss_archive.seeders.sources import codeberg, github
-from oss_archive.seeders.helpers import does_license_exists, does_meta_list_exists, get_all_meta_items, get_all_meta_lists
+from oss_archive.seeders.helpers import does_license_exists, does_meta_list_exists, get_all_meta_items
 
 
 class SeedResults(TypedDict):
@@ -95,9 +93,9 @@ def seed_meta_items(db: Session):
         if not meta_list_does_exists:
             continue
         
-        # # Limit meta_items seeded while testing.
-        # if meta_list.key not in ["internet", "ai", "prog_awe"]:
-        #     continue 
+        # Limit meta_items seeded while testing.
+        if ENV == "dev" and meta_list.key not in ["internet", "ai", "prog_awe"]:
+            continue 
 
         for item in meta_list.items:
             _ = seed_meta_item_from_source(meta_list_key=meta_list.key, meta_item=item, db=db)
@@ -121,6 +119,11 @@ def seed_os_softwares(db: Session):
         return
     
     for meta_item in meta_items:
+
+        # Limit meta_items seeded while testing.
+        if ENV == "dev" and meta_item.meta_list_key not in ["internet", "ai", "prog_awe"]:
+            continue 
+
         _ = seed_os_softwares_from_source(meta_item, db)
         # Sleep 0.5 seconds to prevent source's rate-limit
         sleep(0.5)
