@@ -74,7 +74,5 @@ class DescriptiveSchema(
 class MinimalSchema(
     IdField,
     NameField,
-    MetaListKeyField,
-    MetaItemIdField,
     ):
     pass
