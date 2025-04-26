@@ -20,7 +20,7 @@
             "owner_type": "Individual",
             "source": "github",
             "other_sources": [],
-            "actions": "download_all",
+            "actions": "download_only",
             "actions_on": [
                 "awesome-python"
             ]
