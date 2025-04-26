@@ -35,12 +35,6 @@ class ActionsField(BaseModel):
 class ActionsOnField(BaseModel):
     actions_on: Annotated[list[str], Field(default=[])]
 
-class SeededReposField(BaseModel):
-    seeded_repos: Annotated[list[str], Field(default=[])]
-
-class NotSeededReposField(BaseModel):
-    not_seeded_repos: Annotated[list[str], Field(default=[])]
-
 
 class FullSchema(
     IdField,
@@ -59,10 +53,7 @@ class FullSchema(
 
     ActionsField,
     ActionsOnField,
-
-    SeededReposField,
-    NotSeededReposField,
-
+    
     CreatedAtField,
     UpdatedAtField
     ):
@@ -78,8 +69,6 @@ class DescriptiveSchema(
 
     SourceField,
 
-    SeededReposField,
-    NotSeededReposField,
 
     PriorityField,
     ReviewedField,
