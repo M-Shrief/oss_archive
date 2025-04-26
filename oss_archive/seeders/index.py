@@ -45,12 +45,9 @@ def seed_meta_lists(db: Session):
     meta_lists: list[MetaListSchemas.JSONSchema] = get_meta_lists_from_json_files()
     for meta_list in meta_lists:
         # Seed JSON MetaList's metadata as a MetaListModel  
-        seeded_meta_list = seed_meta_list(meta_list, db)
-        if seeded_meta_list is None:
-            continue
-        # Seed JSON MetaList's items as MetaItemModel
-        # for meta_item in meta_list.items:
-            # _ = seed_meta_item(meta_item)
+        _ = seed_meta_list(meta_list, db)
+    
+    return
 
 def seed_meta_list(meta_list: MetaListSchemas.JSONSchema, db: Session)->MetaListModel | None:
     """Seed Meta list from the meta list's metadata in its json file"""
@@ -99,7 +96,7 @@ def seed_meta_items(db: Session):
             continue
         
         # # Limit meta_items seeded while testing.
-        # if meta_list.key not in ["internet", "ai"]:
+        # if meta_list.key not in ["internet", "ai", "prog_awe"]:
         #     continue 
 
         for item in meta_list.items:
