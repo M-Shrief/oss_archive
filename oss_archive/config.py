@@ -7,6 +7,7 @@ __env = dotenv_values(".env")
 ENV = __env.get("ENV") or "dev"
 
 ARCHIVE_BASE_PATH = __env.get("ARCHIVE_BASE_PATH")
+COMPRESSED_ARCHIVE_BASE_PATH = __env.get("COMPRESSED_ARCHIVE_BASE_PATH")
 
 JSON_META_LISTS_PATH = __env.get("JSON_META_LISTS_PATH")
 JSON_LICENSES_PATH = __env.get("JSON_LICENSES_PATH")
