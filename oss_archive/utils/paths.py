@@ -8,8 +8,10 @@ def get_oss_archive_path(oss_fullname: str) -> str:
     return f"{ARCHIVE_BASE_PATH}/{oss_fullname}"
 
 def get_oss_compressed_archive_path(oss_fullname: str) -> str:
-    return f"{COMPRESSED_ARCHIVE_BASE_PATH}/{oss_fullname}.tar"
+    return f"{COMPRESSED_ARCHIVE_BASE_PATH}/{oss_fullname}.tar.gz"
 
+def get_absolute_path(path: str)->str:
+    return os.path.abspath(path)
 
 def does_path_exists(path: str) -> bool | None:
     try:
