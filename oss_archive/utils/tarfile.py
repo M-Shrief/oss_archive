@@ -1,6 +1,7 @@
 import os
 import tarfile
 ### 
+from oss_archive.config import ARCHIVE_BASE_PATH
 from oss_archive.utils import paths
 from oss_archive.utils.logger import logger
 
@@ -21,7 +22,7 @@ async def compress(oss_fullname: str) -> bool:
 async def decompress(oss_fullname: str) -> bool:
     """decompress OSS's tarfile"""
     try:
-        archive_path = paths.get_oss_archive_path(oss_fullname)
+        archive_path =  ARCHIVE_BASE_PATH or "./archive"
         compressed_archive_path = paths.get_oss_compressed_archive_path(oss_fullname)
 
         with tarfile.open(compressed_archive_path, "r") as tar:
