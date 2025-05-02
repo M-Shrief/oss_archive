@@ -30,7 +30,7 @@ class OtherSourcesField(BaseModel):
     other_sources: Annotated[list[str], Field(max_length=256, default=[], examples=[["github", "gitlab"]])]
 
 class ActionsField(BaseModel):
-    actions: Annotated[ActionsType, Field(default=ActionsType.DownloadAll)]
+    actions: Annotated[ActionsType, Field(default=ActionsType.ArchiveAll)]
 
 class ActionsOnField(BaseModel):
     actions_on: Annotated[list[str], Field(default=[])]

@@ -8,9 +8,9 @@ from enum import Enum
 ### General Fields
 
 class ActionsType(str, Enum):
-    DownloadAll = "download_all"
-    DownloadOnly = "download_only"
-    DownloadExcept = "download_except"
+    ArchiveAll = "archive_all"
+    ArchiveOnly = "archive_only"
+    ArchiveExcept = "archive_except"
 
 
 class OwnerType(str, Enum):

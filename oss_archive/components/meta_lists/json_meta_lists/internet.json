@@ -17,7 +17,7 @@
             "owner_type": "Organization",
             "source": "codeberg",
             "other_sources": [],
-            "actions": "download_all",
+            "actions": "archive_all",
             "actions_on": []
         }
     ]

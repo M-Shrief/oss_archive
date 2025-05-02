@@ -23,7 +23,7 @@
             "owner_type": "Individual",
             "source": "github",
             "other_sources": [],
-            "actions": "download_all",
+            "actions": "archive_all",
             "actions_on": []
         },
         {
@@ -34,7 +34,7 @@
             "owner_type": "Organization",
             "source": "github",
             "other_sources": [],
-            "actions": "download_all",
+            "actions": "archive_all",
             "actions_on": []
         }
     ]

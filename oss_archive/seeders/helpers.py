@@ -39,12 +39,12 @@ def should_apply_action_on_oss(meta_item: MetaItem, repo_dict: dict[str, Any])->
 
     # Filter seeded repos depending on meta_item.actions && meta_item.actions_on
     match meta_item.actions:
-        case ActionsType.DownloadAll: # Get all repos without filtering
+        case ActionsType.ArchiveAll: # Get all repos without filtering
             should_download = True
-        case ActionsType.DownloadOnly:
+        case ActionsType.ArchiveOnly:
             if repo_name in meta_item.actions_on:
                 should_download = True
-        case ActionsType.DownloadExcept:
+        case ActionsType.ArchiveExcept:
             if repo_name not in meta_item.actions_on:
                 should_download = True
     
