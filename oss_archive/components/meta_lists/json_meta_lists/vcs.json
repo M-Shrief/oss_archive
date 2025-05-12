@@ -1,0 +1,71 @@
+{
+    "key": "vcs",
+    "name": "Version Control Systems (VCS)",
+    "tags": [
+        "Version Control",
+        "DevOps",
+        "DevSecOps",
+        "Git",
+        "GitHub",
+        "Codeberg"
+    ],
+    "reviewed": true,
+    "priority": 1,
+    "items": [
+        {
+            "reviewed": true,
+            "priority": 1,
+            "html_url": "https://forgejo.org/",
+            "owner_username": "forgejo",
+            "owner_type": "Organization",
+            "source": "codeberg",
+            "other_sources": [],
+            "actions": "archive_all",
+            "actions_on": []
+        },
+        {
+            "reviewed": true,
+            "priority": 1,
+            "html_url": "https://gitea.com/",
+            "owner_username": "gitea",
+            "owner_type": "Organization",
+            "source": "gitea",
+            "other_sources": ["github"],
+            "actions": "archive_all",
+            "actions_on": []
+        },
+        {
+            "reviewed": true,
+            "priority": 4,
+            "html_url": "https://gogs.io/",
+            "owner_username": "gogs",
+            "owner_type": "Organization",
+            "source": "github",
+            "other_sources": ["github"],
+            "actions": "archive_all",
+            "actions_on": []
+        },
+        {
+            "reviewed": true,
+            "priority": 3,
+            "html_url": "https://onedev.io/",
+            "owner_username": "theonedev",
+            "owner_type": "Organization",
+            "source": "github",
+            "other_sources": ["github"],
+            "actions": "archive_all",
+            "actions_on": []
+        },
+        {
+            "reviewed": true,
+            "priority": 1,
+            "html_url": "https://radicle.xyz/",
+            "owner_username": "radicle",
+            "owner_type": "Organization",
+            "source": "custom",
+            "other_sources": ["https://app.radicle.xyz/nodes/seed.radicle.xyz"],
+            "actions": "archive_all",
+            "actions_on": []
+        }
+    ]
+}
