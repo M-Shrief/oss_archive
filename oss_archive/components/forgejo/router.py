@@ -180,3 +180,65 @@ def delete_user(username: str):
 #     pass
 ##############################
 
+
+#### Repos ################
+
+@router.get(
+    "/forgejo/repos",
+    status_code=status.HTTP_200_OK,
+    response_model=list[ForgejoRepo],
+    response_model_exclude_none=True
+)
+async def get_repos(page: int = 1, limit: int = 10):
+    res = requests.get(endpoint=f"/repos/search?page={page}&limit={limit}")
+    if res is None or res.status_code != 200:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unknown error while getting repos")
+    result = res.json()
+    repos = result["data"]
+    return repos
+
+
+@router.get(
+    "/forgejo/repos/{owner}/{repo}",
+    status_code=status.HTTP_200_OK,
+    response_model=ForgejoRepo,
+    response_model_exclude_none=True
+)
+async def get_repo(owner: str, repo: str):
+    res = requests.get(endpoint=f"/repos/{owner}/{repo}")
+    if res is None or res.status_code != 200:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Repo is not Found")
+    repo = res.json()
+    return repo
+
+
+@router.post(
+"/forgejo/repos/migrate",
+    status_code=status.HTTP_201_CREATED,
+    response_model=ForgejoRepo,
+    response_model_exclude_none=True
+)
+async def migrate_repo(body: dict[str, Any]):
+    # {
+        # "clone_addr": str
+        # "repo_name": str
+        # "repo_owner": str
+        # "service": Enum[ git, github, gitea, gitlab, gogs, onedev, gitbucket, codebase ]
+        # "mirror": bool
+        # "mirror_interval": str
+    # }
+    try:
+        result = requests.post(endpoint="/repos/migrate", body=body)
+        if result is None:
+            logger.error("Migrating error", result=result)
+            raise Exception("Couldn't migrate repo")
+        new_repo: ForgejoUser = result.json()
+        return new_repo
+    except Exception as e:
+        logger.error("Couldn't add migrate repo", error=e)
+        raise HTTPException(status.HTTP_406_NOT_ACCEPTABLE, detail="Error: Couldn't add the new user, try again!")
+
+
+    
+##############################
+
