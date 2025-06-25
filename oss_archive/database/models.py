@@ -98,24 +98,3 @@ class OSSoftware(Base):
 
     meta_item_id: Mapped[UUID] = mapped_column(ForeignKey("meta_items.id"), nullable=False)
     meta_item: Mapped["MetaItem"] = relationship(back_populates="os_softwares")
-
-    license_key: Mapped[str] = mapped_column(ForeignKey("licenses.key"), default="unknown")
-    license: Mapped["License"] = relationship()
-
-
-
-# Get the data from: https://api.github.com/licenses
-# And see each license name,html_url,description,license_body,
-class License(Base):
-    __tablename__: str = "licenses"
-
-    # No need for id field because they're a handful of items, we use the key field as the primary key.
-
-    # A key for the licenses, like MIT licenses -> mit, and on.
-    key: Mapped[str] = mapped_column(String(length=128), primary_key=True, nullable=False)
-    fullname: Mapped[str | None] = mapped_column(String(length=128), nullable=True)
-    name: Mapped[str | None] = mapped_column(String(length=128), nullable=True)
-
-    # URLs
-    html_url: Mapped[str | None] = mapped_column(String(length=256), nullable=True) ### License's page    
-    api_url: Mapped[str | None] = mapped_column(String(length=256), nullable=True) ### License's API
