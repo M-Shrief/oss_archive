@@ -13,6 +13,17 @@
             "reviewed": true,
             "priority": 1,
             "html_url": null,
+            "owner_username": "brave",
+            "owner_type": "Organization",
+            "source": "github",
+            "other_sources": [],
+            "actions": "archive_all",
+            "actions_on": []
+        },
+        {
+            "reviewed": true,
+            "priority": 1,
+            "html_url": null,
             "owner_username": "librewolf",
             "owner_type": "Organization",
             "source": "codeberg",
