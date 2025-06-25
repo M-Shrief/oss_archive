@@ -41,4 +41,4 @@ class MetaItemIdField(BaseModel):
     meta_item_id: UUID
 
 class LicenseKeyField(BaseModel):
-    license_key: Annotated[str, Field(max_length=256, examples=["mit"])]
+    license_key: Annotated[str, Field(max_length=256, examples=["MIT"])]

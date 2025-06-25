@@ -9,7 +9,7 @@ class HTMLURLField(BaseModel):
     html_url: Annotated[str | None, Field(max_length=256, default=None)]
 
 class OwnerUsernameField(BaseModel):
-    owner_username: Annotated[str, Field(max_length=256, examples=["ai"])]
+    owner_username: Annotated[str, Field(max_length=256, examples=["deepseek-ai"])]
 
 class OwnerNameField(BaseModel):
     owner_name: Annotated[str, Field(max_length=256, examples=["ai"])]
