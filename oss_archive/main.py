@@ -6,18 +6,16 @@ from sqlalchemy.orm import Session
 from scalar_fastapi import get_scalar_api_reference # pyright:ignore[reportMissingTypeStubs]
 from typing import Annotated
 ###
+from oss_archive.utils.logger import logger
+# Database
 from oss_archive.database.index import get_sync_db, async_engine
 from oss_archive.database.models import Base
-from oss_archive.seeders.index import seed as seed_db
-
-from oss_archive.utils.logger import logger
-
+from oss_archive.seeders.index import seed
+# Components
 from oss_archive.components.meta_lists.router import router as meta_lists_router
-from oss_archive.components.licenses.router import router as licenses_router
 from oss_archive.components.meta_items.router import router as meta_items_router
 from oss_archive.components.os_softwares.router import router as os_softwares_router
-
-
+from oss_archive.components.forgejo.router import router as forgejo_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -77,9 +75,10 @@ async def scalar_html() :
     )
 
 @app.get("/seed", status_code=status.HTTP_200_OK)
-def seed(db: Annotated[Session, Depends(dependency=get_sync_db)]):
+def seed_database(db: Annotated[Session, Depends(dependency=get_sync_db)]):
     try:
-        seed_db(db)
+        # Maybe we can add query params to skip what we want
+        _ = seed(db)
         return {"message": "Seedded The Database Successfully"}
     except Exception as e:
         logger.error("Seeding failure", error=e) 
@@ -87,11 +86,11 @@ def seed(db: Annotated[Session, Depends(dependency=get_sync_db)]):
 
 @app.get("/ping")
 async def ping():    
-    return {"message": "pong",}
+    return {"message": "pong"}
 
 
 ### Adding API routes
 app.include_router(meta_lists_router, prefix="/api")
-app.include_router(licenses_router, prefix="/api")
 app.include_router(meta_items_router, prefix="/api")
 app.include_router(os_softwares_router, prefix="/api")
+app.include_router(forgejo_router, prefix="/api")
