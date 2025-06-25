@@ -5,7 +5,7 @@ from typing import Any
 from collections.abc import Sequence
 ### 
 from oss_archive.utils.logger import logger
-from oss_archive.database.models import MetaList, MetaItem, OSSoftware, License
+from oss_archive.database.models import MetaList, MetaItem, OSSoftware
 from oss_archive.schemas.general import ActionsType
 
 def get_all_meta_lists(db: Session) -> Sequence[MetaList] | None:
@@ -74,16 +74,6 @@ def does_meta_item_exists(meta_item_owner_username: str, db: Session) -> bool:
 def does_oss_exists(oss_fullname: str, db: Session) -> bool:
     try:
         stmt = select(OSSoftware).where(OSSoftware.fullname == oss_fullname)
-        res = db.scalars(statement=stmt)
-
-        _ = res.one() # if it exists in won't raise an error
-        return True
-    except exc.NoResultFound:
-        return False
-
-def does_license_exists(license_key: str, db: Session) -> bool:
-    try:
-        stmt = select(License).where(License.key == license_key)
         res = db.scalars(statement=stmt)
 
         _ = res.one() # if it exists in won't raise an error
