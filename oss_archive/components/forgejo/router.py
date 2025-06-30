@@ -71,6 +71,66 @@ def get_orgs_repos(org_name: str):
         return 
 
 
+@router.post(
+    path="/forgejo/orgs",
+    status_code=status.HTTP_201_CREATED,
+    response_model=ForgejoOrganization,
+    response_model_exclude_none=True,
+)
+def create_org_for_user(data: dict[str, Any]):
+    try:
+        username = data["username"]
+        
+        request_body = {"username": data["org_name"]}
+        result  = requests.post(endpoint=f"/admin/users/{username}/orgs", body=request_body)
+        if result is None:
+            raise Exception("Couldn't create org")
+        # if result.status_code != 201:
+        #     raise error
+        #     pass
+
+        new_org: ForgejoUser = result.json()
+        return new_org
+    except Exception as e:
+        logger.error("Couldn't add new org", error=e)
+        raise HTTPException(status.HTTP_406_NOT_ACCEPTABLE, detail="Error: Couldn't add the new org, try again!")
+
+
+# @router.post(
+#     path="/forgejo/orgs/repos",
+#     status_code=status.HTTP_201_CREATED,
+#     response_model=ForgejoRepo,
+#     response_model_exclude_none=True,
+# )
+# def create_repo_for_org(data: dict[str, Any]):
+#     try:
+#         org_name = data["org_name"]
+#         req_body = {}
+#         result  = requests.post(endpoint=f"/admin/users/{org_name}/repos", body=req_body)
+#         if result is None:
+#             raise Exception("Couldn't create repo for org")
+        # if result.status_code != 201:
+        #     raise error
+        #     pass
+#         new_org: ForgejoUser = result.json()
+#         return new_org
+#     except Exception as e:
+#         logger.error("Couldn't create repo for org", error=e)
+#         raise HTTPException(status.HTTP_406_NOT_ACCEPTABLE, detail="Error: Couldn't create repo for org, try again!")
+
+@router.delete(
+    path="/forgejo/orgs/{org_name}",
+    status_code=status.HTTP_202_ACCEPTED,
+    response_model_exclude_none=True
+)
+def delete_org(org_name: str):
+    result = requests.delete(endpoint=f"/orgs/{org_name}")
+    if result is not None and result.status_code == 204:
+        return
+    else:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Couldn't find user")
+
+
 ##############################
 
 #### Users ######################
@@ -146,6 +206,10 @@ def add_user(user_data: dict[str, Any]):
         result = requests.post(endpoint="/admin/users", body=user_data)
         if result is None:
             raise Exception("Couldn't create user")
+        # if result.status_code != 201:
+        #     # raise error
+        #     pass
+
         new_user: ForgejoUser = result.json()
         return new_user
     except Exception as e:
@@ -232,6 +296,9 @@ async def migrate_repo(body: dict[str, Any]):
         if result is None:
             logger.error("Migrating error", result=result)
             raise Exception("Couldn't migrate repo")
+        # if result.status_code != 201:
+        #     raise error
+        #     pass
         new_repo: ForgejoUser = result.json()
         return new_repo
     except Exception as e:
