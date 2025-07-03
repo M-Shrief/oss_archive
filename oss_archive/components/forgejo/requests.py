@@ -1,5 +1,5 @@
 from httpx import RequestError, NetworkError, HTTPStatusError, ConnectError, ReadError, Timeout
-from httpx import URL, Client, Cookies, Headers, Response, QueryParams
+from httpx import URL, Client, Cookies, Headers, Response, QueryParams, AsyncClient
 from typing import Any
 ###
 from oss_archive.config import Forgejo
@@ -62,6 +62,32 @@ def post(endpoint: str, body: Any, timeout: Timeout = DEFAULT_TIMEOUT)-> Respons
     except RequestError as e:
         logger.error("Error while making a request", error=e)
         return None
+
+async def async_post(endpoint: str, body: Any, timeout: Timeout = DEFAULT_TIMEOUT)-> Response | None:
+    """A helper function to make a GET request to Forgejo API,
+    adding the required headers for authentication,
+    and adding the endpoint parameter to the API url.
+
+    example for endpoint paramater: /admin/orgs"""
+
+    try:
+        async with AsyncClient(transport=ASYNC_TRANSPORT, timeout=timeout) as client:
+            response = await client.post(
+                url=f"{Forgejo.get("base_url")}{endpoint}",
+                headers=base_headers,
+                json=body
+            )
+
+            return response
+    except NetworkError:
+        logger.error("network error while making the request")
+        return None
+    except HTTPStatusError as e:
+        return e.response
+    except RequestError as e:
+        logger.error("Error while making a request", error=e)
+        return None
+
 
 
 def patch(endpoint: str, body: Any, timeout: Timeout = DEFAULT_TIMEOUT)-> Response | None:
