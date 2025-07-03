@@ -271,28 +271,12 @@ async def get_repo(owner: str, repo: str):
 @router.post(
 "/forgejo/repos/migrate",
     status_code=status.HTTP_201_CREATED,
-    response_model=ForgejoRepo,
     response_model_exclude_none=True
 )
-async def migrate_repo(body: dict[str, Any]):
-    # {
-        # "clone_addr": str
-        # "repo_name": str
-        # "repo_owner": str
-        # "service": Enum[ git, github, gitea, gitlab, gogs, onedev, gitbucket, codebase ]
-        # "mirror": bool
-        # "mirror_interval": str
-    # }
+async def migrate_repo(body: MigrateRepoReqBody, background_tasks: BackgroundTasks):
     try:
-        result = requests.post(endpoint="/repos/migrate", body=body)
-        if result is None:
-            logger.error("Migrating error", result=result)
-            raise Exception("Couldn't migrate repo")
-        # if result.status_code != 201:
-        #     raise error
-        #     pass
-        new_repo: ForgejoUser = result.json()
-        return new_repo
+        background_tasks.add_task(migrate_repo_task, body)
+        return {"message": "Repo is being migrated and it takes time, please wait and check it."}
     except Exception as e:
         logger.error("Couldn't add migrate repo", error=e)
         raise HTTPException(status.HTTP_406_NOT_ACCEPTABLE, detail="Error: Couldn't add the new user, try again!")
