@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi import APIRouter, HTTPException, status, BackgroundTasks
 from typing import Any
 ###
 from oss_archive.components.forgejo import requests
-from oss_archive.components.forgejo.schema import ForgejoOrganization, ForgejoUser, ForgejoRepo, ForgejoLicense, ForgejoLicensesListItem
+from oss_archive.components.forgejo.schema import ForgejoOrganization, ForgejoUser, ForgejoRepo, ForgejoLicense, ForgejoLicensesListItem, CreateOrgReqBody, AddUserReqBody, MigrateRepoReqBody
+from oss_archive.components.forgejo.tasks import migrate_repo_task
 from oss_archive.utils.httpx import get_response_metadata
 from oss_archive.utils.logger import logger
 
@@ -77,11 +78,10 @@ def get_orgs_repos(org_name: str):
     response_model=ForgejoOrganization,
     response_model_exclude_none=True,
 )
-def create_org_for_user(data: dict[str, Any]):
+def create_org_for_user(body: CreateOrgReqBody):
     try:
-        username = data["username"]
-        
-        request_body = {"username": data["org_name"]}
+        username = body.username
+        request_body = {"username": body.org_name}
         result  = requests.post(endpoint=f"/admin/users/{username}/orgs", body=request_body)
         if result is None:
             raise Exception("Couldn't create org")
@@ -176,7 +176,7 @@ def get_user(username: str):
     response_model=list[ForgejoRepo],
     response_model_exclude_none=True
 )
-def get_user_repos(username: str):
+async def get_user_repos(username: str):
     res = requests.get(endpoint=F"/users/{username}/repos")
     if res is None or res.status_code != 200:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Couldn't find user")
@@ -197,13 +197,9 @@ def get_user_repos(username: str):
     response_model=ForgejoUser,
     response_model_exclude_none=True,
 )
-def add_user(user_data: dict[str, Any]):
-    #   "email": "example2@mail.com",
-    #   "username": "example2",
-    #   "login_name": "example2",
-    #   "password": "P@ssword1"
+def add_user(user_data: AddUserReqBody):
     try:
-        result = requests.post(endpoint="/admin/users", body=user_data)
+        result = requests.post(endpoint="/admin/users", body=user_data.model_dump())
         if result is None:
             raise Exception("Couldn't create user")
         # if result.status_code != 201:
@@ -238,10 +234,6 @@ def delete_user(username: str):
 #     # Patch "/admin/users/{username}"
 #     pass
 
-
-# def add_repo_to_user():
-#     # POST "/admin/users/{username}/repos"
-#     pass
 ##############################
 
 
