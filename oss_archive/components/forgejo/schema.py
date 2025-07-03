@@ -105,3 +105,34 @@ class ForgejoLicense(BaseModel):
 class ForgejoLicensesListItem(BaseModel):
     key: Annotated[str | None, Field(examples=["MIT"])]
     name: Annotated[str | None, Field(examples=["MIT"])]
+
+
+### Requests Schemas
+
+class CreateOrgReqBody(BaseModel):
+    username: Annotated[str, Field(examples=["user"])]
+    org_name: Annotated[str, Field(examples=["org1"])]
+
+class AddUserReqBody(BaseModel):
+    email: Annotated[str, Field(examples=["example2@mail.com"])]
+    username: Annotated[str, Field(examples=["example2"])]
+    password: Annotated[str, Field(examples=["P@ssword1"])]
+
+
+class ServiceEnum(str, Enum):
+    git = "git"
+    github = "github"
+    gitea = "gitea"
+    gitlab = "gitlab"
+    gogs = "gogs"
+    onedev = "onedev"
+    gitbucket = "gitbucket"
+    codebase = "codebase"
+    forgejo = "forgejo"
+class MigrateRepoReqBody(BaseModel):
+    clone_addr: Annotated[str, Field(examples=["https://github.com/deepseek-ai/awesome-deepseek-integration.git"])]
+    repo_name: Annotated[str, Field(examples=["awesome-deepseek-integration"])]
+    repo_owner: Annotated[str, Field(examples=["deepseek-ai-mirrored"])]
+    service: Annotated[ServiceEnum, Field(default=ServiceEnum.git)]
+    mirror: Annotated[bool, Field(default=True)]
+    mirror_interval: Annotated[str, Field(default="168h0m0s")]
