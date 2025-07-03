@@ -1,7 +1,7 @@
 {
   "details": {
-    "path": "/api/owners",
-    "method": "GET",
+    "path": "/api/forgejo/orgs/deepseek-ai-mirrored2",
+    "method": "DELETE",
     "pathParams": []
   },
   "requests": [
@@ -11,5 +11,5 @@
   ],
   "operationType": "unary",
   "invokerName": "rest",
-  "typeHint": "GET"
+  "typeHint": "DELETE"
 }

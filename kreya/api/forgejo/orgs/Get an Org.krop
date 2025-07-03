@@ -1,6 +1,6 @@
 {
   "details": {
-    "path": "/api/licenses",
+    "path": "/api/forgejo/orgs/deepseek-ai-mirrored",
     "method": "GET",
     "pathParams": []
   },

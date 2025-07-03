@@ -1,6 +1,6 @@
 {
   "details": {
-    "path": "/api/licenses/mit",
+    "path": "/api/forgejo/orgs",
     "method": "GET",
     "pathParams": []
   },
