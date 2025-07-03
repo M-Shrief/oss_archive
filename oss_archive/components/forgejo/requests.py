@@ -1,4 +1,4 @@
-from httpx import RequestError, NetworkError, HTTPStatusError, ConnectError, ReadError
+from httpx import RequestError, NetworkError, HTTPStatusError, ConnectError, ReadError, Timeout
 from httpx import URL, Client, Cookies, Headers, Response, QueryParams
 from typing import Any
 ###
@@ -15,14 +15,14 @@ base_headers = Headers(
         }
     )
 
-def get(endpoint: str, params: QueryParams | None=None)-> Response | None:
+def get(endpoint: str, params: QueryParams | None=None, timeout: Timeout = DEFAULT_TIMEOUT)-> Response | None:
     """A helper function to make a GET request to Forgejo API,
     adding the required headers for authentication,
     and adding the endpoint parameter to the API url.
     
     example for endpoint paramater: /admin/orgs"""
     try:
-        with Client(transport=SYNC_TRANSPORT, timeout=DEFAULT_TIMEOUT) as client:
+        with Client(transport=SYNC_TRANSPORT, timeout=timeout) as client:
             response = client.get(
                 url=f"{Forgejo.get("base_url")}{endpoint}",
                 params=params,
@@ -39,14 +39,14 @@ def get(endpoint: str, params: QueryParams | None=None)-> Response | None:
         logger.error("Error while making a request", error=e)
         return None
 
-def post(endpoint: str, body: Any)-> Response | None:
+def post(endpoint: str, body: Any, timeout: Timeout = DEFAULT_TIMEOUT)-> Response | None:
     """A helper function to make a GET request to Forgejo API,
     adding the required headers for authentication,
     and adding the endpoint parameter to the API url.
     
     example for endpoint paramater: /admin/orgs"""
     try:
-        with Client(transport=SYNC_TRANSPORT, timeout=DEFAULT_TIMEOUT) as client:
+        with Client(transport=SYNC_TRANSPORT, timeout=timeout) as client:
             response = client.post(
                 url=f"{Forgejo.get("base_url")}{endpoint}",
                 headers=base_headers,
@@ -64,14 +64,14 @@ def post(endpoint: str, body: Any)-> Response | None:
         return None
 
 
-def patch(endpoint: str, body: Any)-> Response | None:
+def patch(endpoint: str, body: Any, timeout: Timeout = DEFAULT_TIMEOUT)-> Response | None:
     """A helper function to make a GET request to Forgejo API,
     adding the required headers for authentication,
     and adding the endpoint parameter to the API url.
     
     example for endpoint paramater: /admin/orgs"""
     try:
-        with Client(transport=SYNC_TRANSPORT, timeout=DEFAULT_TIMEOUT) as client:
+        with Client(transport=SYNC_TRANSPORT, timeout=timeout) as client:
             response = client.patch(
                 url=f"{Forgejo.get("base_url")}{endpoint}",
                 headers=base_headers,
@@ -88,14 +88,14 @@ def patch(endpoint: str, body: Any)-> Response | None:
         logger.error("Error while making a request", error=e)
         return None
     
-def delete(endpoint: str)-> Response | None:
+def delete(endpoint: str, timeout: Timeout = DEFAULT_TIMEOUT)-> Response | None:
     """A helper function to make a GET request to Forgejo API,
     adding the required headers for authentication,
     and adding the endpoint parameter to the API url.
     
     example for endpoint paramater: /admin/orgs"""
     try:
-        with Client(transport=SYNC_TRANSPORT, timeout=DEFAULT_TIMEOUT) as client:
+        with Client(transport=SYNC_TRANSPORT, timeout=timeout) as client:
             response = client.delete(
                 url=f"{Forgejo.get("base_url")}{endpoint}",
                 headers=base_headers,
