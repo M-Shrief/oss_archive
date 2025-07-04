@@ -354,7 +354,11 @@ async def migrate_repo(body: MigrateRepoReqBody, background_tasks: BackgroundTas
     response_model_exclude_none=True
 )
 async def get_licenses():
-    res = requests.get(endpoint="/licenses")
+    res = await httpx.async_get(
+        base_url=Forgejo.get("base_url") or "",
+        endpoint="/licenses",
+        headers=requests.base_headers
+    )
     if res is None or res.status_code != 200:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unknown error while getting licenses")
     licenses = res.json()
@@ -367,7 +371,11 @@ async def get_licenses():
     response_model_exclude_none=True
 )
 async def get_license_by_key(key: str):
-    res = requests.get(endpoint=f"/licenses/{key}")
+    res = await httpx.async_get(
+        base_url=Forgejo.get("base_url") or "",
+        endpoint=f"/licenses/{key}",
+        headers=requests.base_headers
+    )
     if res is None or res.status_code != 200:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Couldn't find license")
     
