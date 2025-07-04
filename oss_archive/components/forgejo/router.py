@@ -1,13 +1,12 @@
-from httpx._models import Response
 from fastapi import APIRouter, HTTPException, status, BackgroundTasks
 from typing import Any
 ###
 from oss_archive.config import Forgejo
-from oss_archive.components.forgejo import requests
-from oss_archive.components.forgejo.schema import ForgejoOrganization, ForgejoUser, ForgejoRepo, ForgejoLicense, ForgejoLicensesListItem, CreateOrgReqBody, AddUserReqBody, MigrateRepoReqBody
-from oss_archive.components.forgejo.tasks import migrate_repo_task
 from oss_archive.utils import httpx
 from oss_archive.utils.logger import logger
+from oss_archive.components.forgejo.schema import ForgejoOrganization, ForgejoUser, ForgejoRepo, ForgejoLicense, ForgejoLicensesListItem, CreateOrgReqBody, AddUserReqBody, MigrateRepoReqBody
+from oss_archive.components.forgejo.tasks import migrate_repo_task
+from oss_archive.components.forgejo.shared import base_headers
 
 router = APIRouter(tags=["Forgejo"])
 
@@ -23,7 +22,7 @@ async def get_all_orgs() :
     res = await httpx.async_get(
         base_url=Forgejo.get("base_url") or "",
         endpoint="/admin/orgs",
-        headers=requests.base_headers
+        headers=base_headers
         )
 
     if res is None:
@@ -48,7 +47,7 @@ async def get_org(org_name: str):
     res = await httpx.async_get(
         base_url=Forgejo.get("base_url") or "",
         endpoint=F"/orgs/{org_name}",
-        headers=requests.base_headers
+        headers=base_headers
         )
 
     if res is None or res.status_code != 200:
@@ -69,7 +68,7 @@ async def get_orgs_repos(org_name: str):
         res = await httpx.async_get(
             base_url=Forgejo.get("base_url") or "",
             endpoint=F"/orgs/{org_name}/repos",
-            headers=requests.base_headers
+            headers=base_headers
         )
         if res is None or res.status_code != 200:
             raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Couldn't get org's repos")
@@ -102,7 +101,7 @@ async def create_org_for_user(body: CreateOrgReqBody):
             base_url=Forgejo.get("base_url") or "",
             endpoint=f"/admin/users/{username}/orgs",
             body=request_body,
-            headers=requests.base_headers
+            headers=base_headers
         ) 
 
         if result is None:
@@ -149,7 +148,7 @@ async def delete_org(org_name: str):
     result = await httpx.async_delete(
         base_url=Forgejo.get("base_url") or "",
         endpoint=f"/orgs/{org_name}",
-        headers=requests.base_headers
+        headers=base_headers
     )
 
     if result is not None and result.status_code == 204:
@@ -171,7 +170,7 @@ async def get_all_users() :
     res = await httpx.async_get(
         base_url=Forgejo.get("base_url") or "",
         endpoint="/admin/users",
-        headers=requests.base_headers
+        headers=base_headers
     )
 
     if res is None or res.status_code != 200:
@@ -197,7 +196,7 @@ async def get_user(username: str):
     res = await httpx.async_get(
         base_url=Forgejo.get("base_url") or "",
         endpoint=F"/users/{username}",
-        headers=requests.base_headers
+        headers=base_headers
     )
 
     if res is None or res.status_code != 200:
@@ -217,7 +216,7 @@ async def get_user_repos(username: str):
     res = await httpx.async_get(
         base_url=Forgejo.get("base_url") or "",
         endpoint=F"/users/{username}/repos",
-        headers=requests.base_headers
+        headers=base_headers
     )
     if res is None or res.status_code != 200:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Couldn't find user")
@@ -244,7 +243,7 @@ async def add_user(user_data: AddUserReqBody):
             base_url=Forgejo.get("base_url") or "",
             endpoint="/admin/users",
             body=user_data.model_dump(),
-            headers=requests.base_headers
+            headers=base_headers
         )  
         if result is None:
             raise Exception("Couldn't create user")
@@ -268,7 +267,7 @@ async def delete_user(username: str):
         result = await httpx.async_delete(
             base_url=Forgejo.get("base_url") or "",
             endpoint=f"/admin/users/{username}",
-            headers=requests.base_headers
+            headers=base_headers
         ) 
         if result is not None and result.status_code == 204:
             return
@@ -299,7 +298,7 @@ async def get_repos(page: int = 1, limit: int = 10):
     res = await httpx.async_get(
         base_url=Forgejo.get("base_url") or "",
         endpoint=f"/repos/search?page={page}&limit={limit}",
-        headers=requests.base_headers
+        headers=base_headers
     )
 
     if res is None or res.status_code != 200:
@@ -319,7 +318,7 @@ async def get_repo(owner: str, repo: str):
     res = await httpx.async_get(
         base_url=Forgejo.get("base_url") or "",
         endpoint=f"/repos/{owner}/{repo}",
-        headers=requests.base_headers
+        headers=base_headers
     )
     
     if res is None or res.status_code != 200:
@@ -357,7 +356,7 @@ async def get_licenses():
     res = await httpx.async_get(
         base_url=Forgejo.get("base_url") or "",
         endpoint="/licenses",
-        headers=requests.base_headers
+        headers=base_headers
     )
     if res is None or res.status_code != 200:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unknown error while getting licenses")
@@ -374,7 +373,7 @@ async def get_license_by_key(key: str):
     res = await httpx.async_get(
         base_url=Forgejo.get("base_url") or "",
         endpoint=f"/licenses/{key}",
-        headers=requests.base_headers
+        headers=base_headers
     )
     if res is None or res.status_code != 200:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Couldn't find license")
