@@ -1,3 +1,4 @@
+from httpx._models import Response
 from fastapi import APIRouter, HTTPException, status, BackgroundTasks
 from typing import Any
 ###
@@ -166,8 +167,13 @@ async def delete_org(org_name: str):
     response_model=list[ForgejoUser],
     response_model_exclude_none=True
 )
-def get_all_users() :
-    res = requests.get(endpoint="/admin/users")
+async def get_all_users() :
+    res = await httpx.async_get(
+        base_url=Forgejo.get("base_url") or "",
+        endpoint="/admin/users",
+        headers=requests.base_headers
+    )
+
     if res is None or res.status_code != 200:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Couldn't get users")
     data: list[Any]= res.json()
@@ -187,8 +193,13 @@ def get_all_users() :
     response_model=ForgejoUser,
     response_model_exclude_none=True,
 )
-def get_user(username: str):
-    res = requests.get(endpoint=F"/users/{username}")
+async def get_user(username: str):
+    res = await httpx.async_get(
+        base_url=Forgejo.get("base_url") or "",
+        endpoint=F"/users/{username}",
+        headers=requests.base_headers
+    )
+
     if res is None or res.status_code != 200:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Couldn't find user")
     else:
@@ -203,7 +214,11 @@ def get_user(username: str):
     response_model_exclude_none=True
 )
 async def get_user_repos(username: str):
-    res = requests.get(endpoint=F"/users/{username}/repos")
+    res = await httpx.async_get(
+        base_url=Forgejo.get("base_url") or "",
+        endpoint=F"/users/{username}/repos",
+        headers=requests.base_headers
+    )
     if res is None or res.status_code != 200:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Couldn't find user")
     data: list[Any] = res.json()
@@ -223,9 +238,14 @@ async def get_user_repos(username: str):
     response_model=ForgejoUser,
     response_model_exclude_none=True,
 )
-def add_user(user_data: AddUserReqBody):
+async def add_user(user_data: AddUserReqBody):
     try:
-        result = requests.post(endpoint="/admin/users", body=user_data.model_dump())
+        result = await httpx.async_post(
+            base_url=Forgejo.get("base_url") or "",
+            endpoint="/admin/users",
+            body=user_data.model_dump(),
+            headers=requests.base_headers
+        )  
         if result is None:
             raise Exception("Couldn't create user")
         # if result.status_code != 201:
@@ -244,8 +264,12 @@ def add_user(user_data: AddUserReqBody):
     status_code=status.HTTP_202_ACCEPTED,
     response_model_exclude_none=True
 )
-def delete_user(username: str):
-        result = requests.delete(endpoint=f"/admin/users/{username}")
+async def delete_user(username: str):
+        result = await httpx.async_delete(
+            base_url=Forgejo.get("base_url") or "",
+            endpoint=f"/admin/users/{username}",
+            headers=requests.base_headers
+        ) 
         if result is not None and result.status_code == 204:
             return
         else:
