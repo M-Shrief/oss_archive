@@ -31,13 +31,13 @@ def get_response_metadata(res: Response) -> ResponseMetadata:
 
     return ResponseMetadata(url=url, headers=headers, cookies=cookies, time_elapsed=time_elapsed)
 
-def get(base_url: str, endpoint: str, timeout: Timeout = DEFAULT_TIMEOUT, headers: Headers = DEFAULT_HEADERS)-> Response | None:
+def get(base_url: str, endpoint: str, timeout: Timeout = DEFAULT_TIMEOUT, headers: Headers = DEFAULT_HEADERS, retries: int = 3)-> Response | None:
     """A helper function to make a sync GET request using httpx,
     and adding the endpoint parameter to the base url.
     
     example for endpoint paramater: /admin/orgs"""
     try:
-        with Client(transport=SYNC_TRANSPORT, timeout=timeout) as client:
+        with Client(transport=HTTPTransport(retries=retries), timeout=timeout) as client:
             response = client.get(
                 url=base_url + endpoint,
                 headers=headers,
@@ -53,13 +53,13 @@ def get(base_url: str, endpoint: str, timeout: Timeout = DEFAULT_TIMEOUT, header
         logger.error("Error while making a request", error=e)
         return None
 
-async def async_get(base_url: str, endpoint: str, timeout: Timeout = DEFAULT_TIMEOUT, headers: Headers = DEFAULT_HEADERS)-> Response | None:
+async def async_get(base_url: str, endpoint: str, timeout: Timeout = DEFAULT_TIMEOUT, headers: Headers = DEFAULT_HEADERS, retries: int = 3)-> Response | None:
     """A helper function to make an async GET request using httpx,
     and adding the endpoint parameter to the base url.
     
     example for endpoint paramater: /admin/orgs"""
     try:
-        async with AsyncClient(transport=ASYNC_TRANSPORT, timeout=timeout) as client:
+        async with AsyncClient(transport=AsyncHTTPTransport(retries=retries), timeout=timeout) as client:
             response = await client.get(
                 url=base_url + endpoint,
                 headers=headers,
@@ -74,13 +74,13 @@ async def async_get(base_url: str, endpoint: str, timeout: Timeout = DEFAULT_TIM
         logger.error("Error while making a request", error=e)
         return None
 
-def post(base_url: str, endpoint: str, body: Any, timeout: Timeout = DEFAULT_TIMEOUT, headers: Headers = DEFAULT_HEADERS)-> Response | None:
+def post(base_url: str, endpoint: str, body: Any, timeout: Timeout = DEFAULT_TIMEOUT, headers: Headers = DEFAULT_HEADERS, retries: int = 3)-> Response | None:
     """A helper function to make a sync POST request using httpx,
     and adding the endpoint parameter to the base url.
     
     example for endpoint paramater: /admin/orgs"""
     try:
-        with Client(transport=SYNC_TRANSPORT, timeout=timeout) as client:
+        with Client(transport=HTTPTransport(retries=retries), timeout=timeout) as client:
             response = client.post(
                 url=base_url + endpoint,
                 headers=headers,
@@ -97,13 +97,13 @@ def post(base_url: str, endpoint: str, body: Any, timeout: Timeout = DEFAULT_TIM
         logger.error("Error while making a request", error=e)
         return None
 
-async def async_post(base_url: str, endpoint: str, body: Any, timeout: Timeout = DEFAULT_TIMEOUT, headers: Headers = DEFAULT_HEADERS)-> Response | None:
+async def async_post(base_url: str, endpoint: str, body: Any, timeout: Timeout = DEFAULT_TIMEOUT, headers: Headers = DEFAULT_HEADERS, retries: int = 3)-> Response | None:
     """A helper function to make an async POST request using httpx,
     and adding the endpoint parameter to the base url.
     
     example for endpoint paramater: /admin/orgs"""
     try:
-        async with AsyncClient(transport=ASYNC_TRANSPORT, timeout=timeout) as client:
+        async with AsyncClient(transport=AsyncHTTPTransport(retries=retries), timeout=timeout) as client:
             response = await client.post(
                 url=base_url + endpoint,
                 headers=headers,
@@ -119,13 +119,13 @@ async def async_post(base_url: str, endpoint: str, body: Any, timeout: Timeout =
         logger.error("Error while making a request", error=e)
         return None
 
-def put(base_url: str, endpoint: str, body: Any, timeout: Timeout = DEFAULT_TIMEOUT, headers: Headers = DEFAULT_HEADERS)-> Response | None:
+def put(base_url: str, endpoint: str, body: Any, timeout: Timeout = DEFAULT_TIMEOUT, headers: Headers = DEFAULT_HEADERS, retries: int = 3)-> Response | None:
     """A helper function to make a sync PUT request using httpx,
     and adding the endpoint parameter to the base url.
     
     example for endpoint paramater: /admin/orgs"""
     try:
-        with Client(transport=SYNC_TRANSPORT, timeout=timeout) as client:
+        with Client(transport=HTTPTransport(retries=retries), timeout=timeout) as client:
             response = client.put(
                 url=base_url + endpoint,
                 headers=headers,
@@ -142,13 +142,13 @@ def put(base_url: str, endpoint: str, body: Any, timeout: Timeout = DEFAULT_TIME
         logger.error("Error while making a request", error=e)
         return None
 
-async def async_put(base_url: str, endpoint: str, body: Any, timeout: Timeout = DEFAULT_TIMEOUT, headers: Headers = DEFAULT_HEADERS)-> Response | None:
+async def async_put(base_url: str, endpoint: str, body: Any, timeout: Timeout = DEFAULT_TIMEOUT, headers: Headers = DEFAULT_HEADERS, retries: int = 3)-> Response | None:
     """A helper function to make an async PUT request using httpx,
     and adding the endpoint parameter to the base url.
     
     example for endpoint paramater: /admin/orgs"""
     try:
-        async with AsyncClient(transport=ASYNC_TRANSPORT, timeout=timeout) as client:
+        async with AsyncClient(transport=AsyncHTTPTransport(retries=retries), timeout=timeout) as client:
             response = await client.put(
                 url=base_url + endpoint,
                 headers=headers,
@@ -164,13 +164,13 @@ async def async_put(base_url: str, endpoint: str, body: Any, timeout: Timeout = 
         logger.error("Error while making a request", error=e)
         return None
 
-def delete(base_url: str, endpoint: str, timeout: Timeout = DEFAULT_TIMEOUT, headers: Headers = DEFAULT_HEADERS)-> Response | None:
+def delete(base_url: str, endpoint: str, timeout: Timeout = DEFAULT_TIMEOUT, headers: Headers = DEFAULT_HEADERS, retries: int = 3)-> Response | None:
     """A helper function to make a sync DELETE request using httpx,
     and adding the endpoint parameter to the base url.
     
     example for endpoint paramater: /admin/orgs"""
     try:
-        with Client(transport=SYNC_TRANSPORT, timeout=timeout) as client:
+        with Client(transport=HTTPTransport(retries=retries), timeout=timeout) as client:
             response = client.delete(
                 url=base_url + endpoint,
                 headers=headers,
@@ -186,13 +186,13 @@ def delete(base_url: str, endpoint: str, timeout: Timeout = DEFAULT_TIMEOUT, hea
         logger.error("Error while making a request", error=e)
         return None
 
-async def async_delete(base_url: str, endpoint: str, timeout: Timeout = DEFAULT_TIMEOUT, headers: Headers = DEFAULT_HEADERS)-> Response | None:
+async def async_delete(base_url: str, endpoint: str, timeout: Timeout = DEFAULT_TIMEOUT, headers: Headers = DEFAULT_HEADERS, retries: int = 3)-> Response | None:
     """A helper function to make an async DELETE request using httpx,
     and adding the endpoint parameter to the base url.
     
     example for endpoint paramater: /admin/orgs"""
     try:
-        async with AsyncClient(transport=ASYNC_TRANSPORT, timeout=timeout) as client:
+        async with AsyncClient(transport=AsyncHTTPTransport(retries=retries), timeout=timeout) as client:
             response = await client.delete(
                 url=base_url + endpoint,
                 headers=headers,
