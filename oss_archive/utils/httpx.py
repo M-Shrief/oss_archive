@@ -7,8 +7,8 @@ from httpx import RequestError, NetworkError, HTTPStatusError, ConnectError, Rea
 ###
 from oss_archive.utils.logger import logger
 
-### Retries
-# We can use tenacity(https://tenacity.readthedocs.io/en/latest/) to configure more complex logic
+
+# Note about retries: We can use tenacity(https://tenacity.readthedocs.io/en/latest/) to configure more complex logic
 SYNC_TRANSPORT = HTTPTransport(retries=3)
 ASYNC_TRANSPORT = AsyncHTTPTransport(retries=3)
 
