@@ -118,3 +118,48 @@ async def async_post(base_url: str, endpoint: str, body: Any, timeout: Timeout =
     except RequestError as e:
         logger.error("Error while making a request", error=e)
         return None
+
+def put(base_url: str, endpoint: str, body: Any, timeout: Timeout = DEFAULT_TIMEOUT, headers: Headers = DEFAULT_HEADERS)-> Response | None:
+    """A helper function to make a sync PUT request using httpx,
+    and adding the endpoint parameter to the base url.
+    
+    example for endpoint paramater: /admin/orgs"""
+    try:
+        with Client(transport=SYNC_TRANSPORT, timeout=timeout) as client:
+            response = client.put(
+                url=base_url + endpoint,
+                headers=headers,
+                json=body
+            )
+
+            return response
+    except NetworkError as e:
+        logger.error("network error while making the request", error=e)
+        return None
+    except HTTPStatusError as e:
+        return e.response
+    except RequestError as e:
+        logger.error("Error while making a request", error=e)
+        return None
+
+async def async_put(base_url: str, endpoint: str, body: Any, timeout: Timeout = DEFAULT_TIMEOUT, headers: Headers = DEFAULT_HEADERS)-> Response | None:
+    """A helper function to make an async PUT request using httpx,
+    and adding the endpoint parameter to the base url.
+    
+    example for endpoint paramater: /admin/orgs"""
+    try:
+        async with AsyncClient(transport=ASYNC_TRANSPORT, timeout=timeout) as client:
+            response = await client.put(
+                url=base_url + endpoint,
+                headers=headers,
+                json=body
+            )
+            return response
+    except NetworkError as e:
+        logger.error("network error while making the request", error=e)
+        return None
+    except HTTPStatusError as e:
+        return e.response
+    except RequestError as e:
+        logger.error("Error while making a request", error=e)
+        return None
