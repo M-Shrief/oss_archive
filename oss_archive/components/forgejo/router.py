@@ -1,10 +1,11 @@
 from fastapi import APIRouter, HTTPException, status, BackgroundTasks
 from typing import Any
 ###
+from oss_archive.config import Forgejo
 from oss_archive.components.forgejo import requests
 from oss_archive.components.forgejo.schema import ForgejoOrganization, ForgejoUser, ForgejoRepo, ForgejoLicense, ForgejoLicensesListItem, CreateOrgReqBody, AddUserReqBody, MigrateRepoReqBody
 from oss_archive.components.forgejo.tasks import migrate_repo_task
-from oss_archive.utils.httpx import get_response_metadata
+from oss_archive.utils import httpx
 from oss_archive.utils.logger import logger
 
 router = APIRouter(tags=["Forgejo"])
@@ -17,8 +18,13 @@ router = APIRouter(tags=["Forgejo"])
     response_model=list[ForgejoOrganization],
     response_model_exclude_none=True
 )
-def get_all_orgs() :
-    res = requests.get(endpoint="/admin/orgs")
+async def get_all_orgs() :
+    res = await httpx.async_get(
+        base_url=Forgejo.get("base_url") or "",
+        endpoint="/admin/orgs",
+        headers=requests.base_headers
+        )
+
     if res is None:
         return None
     data: list[Any]= res.json()
@@ -37,8 +43,13 @@ def get_all_orgs() :
     response_model=ForgejoOrganization,
     response_model_exclude_none=True,
 )
-def get_org(org_name: str):
-    res = requests.get(endpoint=F"/orgs/{org_name}")
+async def get_org(org_name: str):
+    res = await httpx.async_get(
+        base_url=Forgejo.get("base_url") or "",
+        endpoint=F"/orgs/{org_name}",
+        headers=requests.base_headers
+        )
+
     if res is None or res.status_code != 200:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Couldn't find orgs")
     else:
@@ -52,9 +63,13 @@ def get_org(org_name: str):
     response_model=list[ForgejoRepo],
     response_model_exclude_none=True,
 )
-def get_orgs_repos(org_name: str):
+async def get_orgs_repos(org_name: str):
     try:
-        res = requests.get(endpoint=F"/orgs/{org_name}/repos")
+        res = await httpx.async_get(
+            base_url=Forgejo.get("base_url") or "",
+            endpoint=F"/orgs/{org_name}/repos",
+            headers=requests.base_headers
+        )
         if res is None or res.status_code != 200:
             raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Couldn't get org's repos")
         else:
@@ -78,11 +93,17 @@ def get_orgs_repos(org_name: str):
     response_model=ForgejoOrganization,
     response_model_exclude_none=True,
 )
-def create_org_for_user(body: CreateOrgReqBody):
+async def create_org_for_user(body: CreateOrgReqBody):
     try:
         username = body.username
         request_body = {"username": body.org_name}
-        result  = requests.post(endpoint=f"/admin/users/{username}/orgs", body=request_body)
+        result = await httpx.async_post(
+            base_url=Forgejo.get("base_url") or "",
+            endpoint=f"/admin/users/{username}/orgs",
+            body=request_body,
+            headers=requests.base_headers
+        ) 
+
         if result is None:
             raise Exception("Couldn't create org")
         # if result.status_code != 201:
@@ -123,8 +144,13 @@ def create_org_for_user(body: CreateOrgReqBody):
     status_code=status.HTTP_202_ACCEPTED,
     response_model_exclude_none=True
 )
-def delete_org(org_name: str):
-    result = requests.delete(endpoint=f"/orgs/{org_name}")
+async def delete_org(org_name: str):
+    result = await httpx.async_delete(
+        base_url=Forgejo.get("base_url") or "",
+        endpoint=f"/orgs/{org_name}",
+        headers=requests.base_headers
+    )
+
     if result is not None and result.status_code == 204:
         return
     else:
