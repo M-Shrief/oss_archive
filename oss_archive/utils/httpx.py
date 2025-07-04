@@ -163,3 +163,46 @@ async def async_put(base_url: str, endpoint: str, body: Any, timeout: Timeout = 
     except RequestError as e:
         logger.error("Error while making a request", error=e)
         return None
+
+def delete(base_url: str, endpoint: str, timeout: Timeout = DEFAULT_TIMEOUT, headers: Headers = DEFAULT_HEADERS)-> Response | None:
+    """A helper function to make a sync DELETE request using httpx,
+    and adding the endpoint parameter to the base url.
+    
+    example for endpoint paramater: /admin/orgs"""
+    try:
+        with Client(transport=SYNC_TRANSPORT, timeout=timeout) as client:
+            response = client.delete(
+                url=base_url + endpoint,
+                headers=headers,
+            )
+
+            return response
+    except NetworkError as e:
+        logger.error("network error while making the request", error=e)
+        return None
+    except HTTPStatusError as e:
+        return e.response
+    except RequestError as e:
+        logger.error("Error while making a request", error=e)
+        return None
+
+async def async_delete(base_url: str, endpoint: str, timeout: Timeout = DEFAULT_TIMEOUT, headers: Headers = DEFAULT_HEADERS)-> Response | None:
+    """A helper function to make an async DELETE request using httpx,
+    and adding the endpoint parameter to the base url.
+    
+    example for endpoint paramater: /admin/orgs"""
+    try:
+        async with AsyncClient(transport=ASYNC_TRANSPORT, timeout=timeout) as client:
+            response = await client.delete(
+                url=base_url + endpoint,
+                headers=headers,
+            )
+            return response
+    except NetworkError as e:
+        logger.error("network error while making the request", error=e)
+        return None
+    except HTTPStatusError as e:
+        return e.response
+    except RequestError as e:
+        logger.error("Error while making a request", error=e)
+        return None
