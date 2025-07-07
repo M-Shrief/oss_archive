@@ -7,13 +7,13 @@ from oss_archive.components.forgejo.schema import ForgejoRepo, MigrateRepoReqBod
 from oss_archive.components.forgejo.shared import base_headers
 
 
-async def migrate_repo_task(body: MigrateRepoReqBody):
-    logger.info("Migrating repo...", repo=f"{body.repo_owner}/{body.repo_name}", source=body.clone_addr)
+async def migrate_repo_task(repo_data: MigrateRepoReqBody):
+    logger.info("Migrating repo...", repo=f"{repo_data.repo_owner}/{repo_data.repo_name}", source=repo_data.clone_addr)
 
     result = await httpx.async_post(
         base_url=Forgejo.get("base_url") or "",
         endpoint="/repos/migrate",
-        body=body.model_dump(),
+        body=repo_data.model_dump(),
         headers=base_headers,
         timeout=Timeout(timeout=500.0, connect=100.0)
         )
@@ -23,5 +23,5 @@ async def migrate_repo_task(body: MigrateRepoReqBody):
         return
 
     new_repo: ForgejoRepo = result.json()
-    logger.info("Mirrored repo correctly", repo=f"{body.repo_owner}/{body.repo_name}", source=body.clone_addr)
+    logger.info("Mirrored repo correctly", repo=f"{repo_data.repo_owner}/{repo_data.repo_name}", source=repo_data.clone_addr)
     return new_repo 
