@@ -57,6 +57,50 @@
         },
         {
             "reviewed": true,
+            "priority": 1,
+            "html_url": "https://www.openharmony.cn",
+            "owner_username": "openharmony",
+            "owner_type": "Organization",
+            "source": "gitee",
+            "other_sources": ["https://github.com/openharmony"],
+            "actions": "archive_all",
+            "actions_on": []
+        },
+        {
+            "reviewed": true,
+            "priority": 2,
+            "html_url": "http://www.lineageos.org/",
+            "owner_username": "lineageos",
+            "owner_type": "Organization",
+            "source": "github",
+            "other_sources": [],
+            "actions": "archive_all",
+            "actions_on": []
+        },
+        {
+            "reviewed": true,
+            "priority": 2,
+            "html_url": "https://grapheneos.org/",
+            "owner_username": "GrapheneOS",
+            "owner_type": "Organization",
+            "source": "github",
+            "other_sources": [],
+            "actions": "archive_all",
+            "actions_on": []
+        },
+        {
+            "reviewed": true,
+            "priority": 2,
+            "html_url": "https://doc.e.foundation/",
+            "owner_username": "/e/OS",
+            "owner_type": "Organization",
+            "source": "gitlab",
+            "other_sources": ["https://gitlab.e.foundation/e"],
+            "actions": "archive_all",
+            "actions_on": []
+        },
+        {
+            "reviewed": true,
             "priority": 2,
             "html_url": null,
             "owner_username": "NixOS",
