@@ -1,13 +1,23 @@
+Update Project design:
+- We don't create account for users, we create only one account beside the admin, and it's called "mirrors".
+- we save OSS by repos, and use a naming convention for the repo name: {owner}:{actual_repo_name}
+- OSS table:
+  - owner_name: str
+  - owne_type: Enum
+  - repo_name: str
+  - category: one-to-many
+  - related_categories: many-to-many
+  - is_mirrored: bool
+  - dev_status: ongoing || stopped
+  - topics: [str]
+  - started_at: DateTime
+- We can add a hook, so every time we update the mirror we recompress the OSS, so that we can use torrent to share it as zip.
+
+---
 - Use [Foregejo](https://forgejo.org/) as a bases for archiving/mirroring instead of doing it myself, as they provide a feature already to [mirror repos from external sources](https://forgejo.org/docs/latest/user/repo-mirror/). We can use our database to get the data we need to feed to forgejo to mirror these sources, and then we can compress and torrent/distribute this data again like normal. It'll be just a component we can setup with compose files, and we'll use PostgreSQL as its database -- [doc's link](https://forgejo.org/docs/latest/admin/installation-docker/#postgresql-database).
     - Use the API to [migrate repos](http://localhost:3000/api/swagger#/repository/repoMigrate)
-    - 
-- Add Forgejo as a component and:
-    - Delete licenses component, and use Forgejo 's API for licenses as it have way more that we had initially - 707 licenses already - and I don't need to implement it. (Under `miscellaneous` tag) --> **Done**
-    - Also under `miscellaneous` tag, we have:
-        - gitignore templates for different languages
-        - labels's API -- labels are used in issues to flag them as a `bug`, `duplicate`,...etc.
 - Rename MetaItem's owner fields to 'contributer' instead.
 - Rename OSSoftware/os_softwares field to the abbreviated OSS/oss, without trying to use plurals, just the modern convention.
-- For the JSON files, we can use Alphapitical order instead, and make its MetaItems to belong to multiple MetaList(AI, OS,...etc). Alphapitical Order is just so simple and very easy to sort and save, and we can make multiple instances of the same letter like A-0.json, A-1.json, A-2.json,...etc  
+- For the JSON files, we can use Alphapitical order instead, and make its MetaItems to belong to multiple MetaList(AI, OS,...etc). Alphapitical Order is just so simple and very easy to sort and save, and we can make multiple instances of the same letter like A-0.json, A-1.json, A-2.json,...etc
 - We need to have the ability to identify the MetaItem.other_sources metadata, like if the username is different, if it's custom source we need more data like clone_url...etc. we can make that field a JSON field that we convert into a string when we put it in the database.
 - Maybe, extract JSON files and modules used to for them to a seperate forlder.
