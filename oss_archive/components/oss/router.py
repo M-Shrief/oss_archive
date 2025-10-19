@@ -12,7 +12,7 @@ from oss_archive.utils.logger import logger
 from oss_archive.components.oss import schema as component_schemas
 from oss_archive.schemas import oss as oss_schemas, api as api_schemas
 # from oss_archive.utils import git, tarfile, paths
-from oss_archive.utils import formatter
+from oss_archive.utils import formatter, json as json_utils
 
 router = APIRouter(tags=["OSS"])
 
@@ -116,6 +116,31 @@ async def create_many_oss(req_body: component_schemas.CreateManyOSS_Req, db: Ann
         logger.error("Error occurred while creating many OSS", error=e)
         detail_msg = "An error occurred while creating many OSS, try again later."
         raise HTTPException(status.HTTP_406_NOT_ACCEPTABLE, detail=detail_msg)
+
+
+@router.put(
+    "/oss/json",
+    status_code=status.HTTP_200_OK,
+    response_model=api_schemas.Update_Res,
+    response_model_exclude_none=True
+)
+async def sync_json(db: Annotated[AsyncSession, Depends(get_async_db)]):
+    try:
+        json_utils.del_files(json_utils.OSSJSONFileConfig)
+
+        stmt = select(OSSModel).order_by(OSSModel.fullname)
+        res = await db.scalars(statement=stmt)
+        result = res.all()
+
+        oss_list: list[oss_schemas.JSONSchema] = [oss_schemas.JSONSchema.model_validate(item, from_attributes=True) for item in list(result)]
+
+        json_utils.write_json_files(json_utils.OSSJSONFileConfig, oss_list)
+
+        return api_schemas.Update_Res()
+    except Exception as e:
+        logger.error("ERROR", error=e)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unknown error, try again later")
+
 
 @router.put(
     "/oss/{id}",
