@@ -1,4 +1,3 @@
-from httpx import get
 from typing import Any
 from sqlalchemy.orm import Session
 # from sqlalchemy import select, delete, update
@@ -6,196 +5,122 @@ from sqlalchemy.orm import Session
 from psycopg import errors
 ###
 from oss_archive.utils.logger import logger
-from oss_archive.utils.formatter import format_repo_fullname
-from oss_archive.database.models import MetaItem as MetaItemModel, OSSoftware as OSSoftwareModel
-from oss_archive.schemas import meta_item as MetaItemSchemas
-from oss_archive.schemas.general import OwnerType
-from oss_archive.seeders.helpers import does_meta_item_exists, does_oss_exists, should_apply_action_on_oss
+from oss_archive.utils import httpx
+from oss_archive.utils.formatter import format_oss_fullname
+from oss_archive.database.models import Owner as OwnerModel, OSS as OSSModel
+from oss_archive.schemas import general as general_schemas
+from oss_archive.seeders import helpers
 
 API_BASE_URL = "https://api.github.com"
+DEFAULT_PRIORITY = 7
 
-
-def seed_meta_item(meta_list_key: str, meta_item: MetaItemSchemas.JSONSchema, db: Session) -> MetaItemModel | None:     # This is a protocol member
-    """Seed a single MetaItem from the meta list's items in its JSON file"""
-    try:
-        ### Used 2 different conditions block to differntiate the logs.
-        if not meta_item.reviewed:
-            logger.info(f"Skipped {meta_item.owner_username}'s meta item, because it's not reviewed")
-            return None
-
-        meta_item_does_exists = does_meta_item_exists(meta_item.owner_username, db)
-        if meta_item_does_exists:
-            logger.info(f"Skipped {meta_item.owner_username}'s meta item, because it's already seeded")
-            return None
-
-        
-        new_meta_item = get_meta_item_from_source(meta_list_key, meta_item)
-
-        db.add(new_meta_item)
-        db.commit()
-        # db.refresh()
-        return new_meta_item        
-
-    except errors.UniqueViolation as e:
-        db.rollback()
-        logger.error(f"Error Inserting meta_item for Unique key Violation, using {meta_item.owner_type} meta item", meta_list_key=meta_list_key, meta_item=meta_item, error=e)
-        return None
-    except errors.CheckViolation as e:
-        db.rollback()
-        logger.error(f"Error Inserting meta_item for check Violation, using {meta_item.owner_type} meta item", meta_list_key=meta_list_key, meta_item=meta_item, error=e)
-        return None
-    except Exception as e:
-        db.rollback()
-        logger.error(f"Unknown Error when Inserting meta_item, using {meta_item.owner_type} meta item", meta_list_key=meta_list_key, meta_item=meta_item, error=e)
-        return None
-
-def get_meta_item_from_source(meta_list_key: str, meta_item: MetaItemSchemas.JSONSchema)-> MetaItemModel | None:
-    """Get the Organization/Individual's data from Github API and return it as an Owner Model"""
-    match meta_item.owner_type:
-        case OwnerType.Organization:
-            res = get(url=f"{API_BASE_URL}/orgs/{meta_item.owner_username}")
-        case OwnerType.Individual:
-            res = get(url=F"{API_BASE_URL}/users/{meta_item.owner_username}")
-        case _:
-            logger.error(f"Unknown Owner type: {meta_item.owner_type}")
-            return None
-            
-    if res.status_code != 200:
-        return None
-    res_dict: dict[str, Any] = res.json()
-
-    new_meta_item = get_new_meta_item(meta_list_key, meta_item, res_dict)
-    return new_meta_item
-
-def get_new_meta_item(meta_list_key: str, meta_item: MetaItemSchemas.JSONSchema, api_response: dict[str, Any]) -> MetaItemModel | None: # pyright:ignore[reportExplicitAny]
-    """Get the needed data from Github API into the MetaItem Model"""
-    try:
-        new_meta_item = MetaItemModel()
-        new_meta_item.priority = meta_item.priority
-        new_meta_item.reviewed = meta_item.reviewed
-        ### URLs
-        new_meta_item.html_url = api_response.get("html_url")
-        ### Sources
-        new_meta_item.source = meta_item.source
-        new_meta_item.other_sources = meta_item.other_sources
-        ### Actions
-        new_meta_item.actions = meta_item.actions
-        new_meta_item.actions_on = meta_item.actions_on
-        ### MetaItemModel's Data        
-        new_meta_item.owner_username = meta_item.owner_username
-        new_meta_item.owner_name = api_response.get("name")
-        new_meta_item.owner_type = meta_item.owner_type # pyright: ignore[reportAttributeAccessIssue]
-        new_meta_item.owner_created_at = api_response.get("created_at")
-        new_meta_item.owner_updated_at = api_response.get("updated_at")
-
-        ### Relations
-        new_meta_item.meta_list_key = meta_list_key
-
-        return new_meta_item
-
-    except KeyError as e:
-        logger.error("owner's data keys have changed, so there was an error converting it to an Owner model", error=e)
-        return None
-
-    except Exception as e:
-        logger.error("Unknown error parsing github API for owners' details", error=e)
-        return None
-
-
-def seed_os_softwares(meta_item: MetaItemModel, db: Session) -> list[OSSoftwareModel] | None:
-    repos_arr = get_repos_from_source(meta_item)
+async def seed_owner_oss(owner: OwnerModel, db: Session):
+    repos_arr = await get_repos_from_source(owner)
     if repos_arr is None:
         return None
 
-    new_os_softwares: list[OSSoftwareModel] = []
+    logger.info("Got owners' repos", count=len(repos_arr))
+    new_oss: list[OSSModel] = []
     for repo in repos_arr:
-        should_apply_on = should_apply_action_on_oss(meta_item, repo)
+        should_apply_on = helpers.should_apply_action_on_oss(owner, repo.get("name"))
         if not should_apply_on:
             continue
 
-        seeded_oss = seed_oss(meta_item, repo, db)
+        seeded_oss = await seed_oss(owner, repo, db)
         if seeded_oss is None:
             continue
+    
+        logger.info(f"Seeded OSS: {seeded_oss.fullname}")
 
-        new_os_softwares.append(seeded_oss)
+        new_oss.append(seeded_oss)
 
-    return new_os_softwares
+    logger.info("Seeded all OSS", count=len(new_oss))
 
-def seed_oss(meta_item: MetaItemModel, repo_dict: dict[str, Any], db: Session):
+    return new_oss
+
+async def seed_oss(owner: OwnerModel, repo_dict: dict[str, Any], db: Session):
     try:
         repo_name = repo_dict.get("name")
         if repo_name is None:
             return None
-        oss_fullname = format_repo_fullname(meta_item.owner_username, repo_name)
+        oss_fullname = format_oss_fullname(owner.username, repo_name)
 
-        oss_does_exists = does_oss_exists(oss_fullname, db)
+        oss_does_exists = await helpers.does_oss_exists(oss_fullname, db)
         if oss_does_exists:
             return None
 
-        new_oss = get_new_oss(meta_item, repo_dict)
+        new_oss = create_new_oss(owner, repo_dict)
         if new_oss is None:
             return None
         
         db.add(new_oss)
         db.commit()
+
+        db.refresh(new_oss)
         
         return new_oss
     except errors.UniqueViolation as e:
         db.rollback()
-        logger.error(f"Error Inserting OSS for Unique key Violation OSS from {meta_item.owner_type} meta item", meta_item_owner_username=meta_item.owner_username, error=e)
+        logger.error("Error Inserting OSS for Unique key Violation OSS from Owner's repo", owner=owner, error=e)
         return None
     except errors.CheckViolation as e:
         db.rollback()
-        logger.error(f"Error Inserting OSS for check Violation OSS from {meta_item.owner_type} meta item", meta_item_owner_username=meta_item.owner_username, error=e)
+        logger.error("Error Inserting OSS for check Violation OSS from Owner's repo", owner=owner, error=e)
         return None
     except Exception as e:
         db.rollback()
-        logger.error(f"Unknown Error when Inserting OSS from {meta_item.owner_type} meta item", meta_item_owner_username=meta_item.owner_username, error=e)
+        logger.error("Unknown Error when Inserting OSS from Owner's repom", owner=owner, error=e)
         return None
 
-def get_repos_from_source(meta_item: MetaItemModel):
-    match meta_item.owner_type:
-        case OwnerType.Organization:
-            res = get(url=f"{API_BASE_URL}/orgs/{meta_item.owner_username}/repos")    
-        case OwnerType.Individual:
-            res = get(url=f"{API_BASE_URL}/users/{meta_item.owner_username}/repos")    
-        case _:
-            logger.error(f"Uknown OwnerType: {meta_item.owner_type}")
-            return None
+async def get_repos_from_source(owner: OwnerModel):
+    match owner.type:
+        case general_schemas.OwnerTypeEnum.Organization:
+            res = await httpx.async_get(base_url=f"{API_BASE_URL}", endpoint=f"/orgs/{owner.username}/repos")
+        case general_schemas.OwnerTypeEnum.Individual:
+            res = await httpx.async_get(base_url=f"{API_BASE_URL}", endpoint=f"/users/{owner.username}/repos")
+        # case _:
+        #     logger.error(f"Uknown OwnerType: {meta_item.type}")
+        #     return None
 
-    if res.status_code != 200:
+    if res is None or res.status_code != 200:
+        logger.info("Couldn't get repos from source", res=res)
         return None
+
     res_arr: list[dict[str, Any]] = res.json()
     return res_arr
 
 
-def get_new_oss(meta_item: MetaItemModel, repo_dict: dict[str, Any]) -> OSSoftwareModel | None: # pyright:ignore[reportExplicitAny]
+def create_new_oss(owner: OwnerModel, repo_dict: dict[str, Any]): # pyright:ignore[reportExplicitAny]
     """Get the needed data from Github API response - an item from repos array - to create a OSS model."""
     try:
-        oss = OSSoftwareModel()
-        oss.name = repo_dict.get("name") # pyright:ignore[reportAttributeAccessIssue]
-        oss.fullname = format_repo_fullname(meta_item.owner_username, oss.name)
+        oss = OSSModel()
+        oss.repo_name = repo_dict.get("name") # pyright:ignore[reportAttributeAccessIssue]
+        oss.fullname = format_oss_fullname(owner.username, oss.repo_name)
+        oss.priority = DEFAULT_PRIORITY
         oss.description = repo_dict.get("description")
         oss.topics = repo_dict.get("topics") # pyright:ignore[reportAttributeAccessIssue]
+        oss.reviewed = True
+        oss.is_mirrored = False
+        oss.development_started_at = repo_dict.get("created_at") 
+        oss.development_status = general_schemas.DevelopmentStatusEnum.Stopped if repo_dict.get("archived") else general_schemas.DevelopmentStatusEnum.Ongoing
         oss.html_url = repo_dict.get("html_url")
         oss.clone_url = repo_dict.get("clone_url")
-        oss.created_at_source = repo_dict.get("created_at") 
-        oss.updated_at_source = repo_dict.get("updated_at")
+        # repo_license = repo_dict.get("license")
+        # if repo_license is not None and repo_license["key"] != "other":
+        #     oss.license_key = repo_license["key"]
 
         # Relations
-        oss.meta_list_key = meta_item.meta_list_key
-        oss.meta_item_id = meta_item.id
-        repo_license = repo_dict.get("license")
-        if repo_license is not None and repo_license["key"] != "other":
-            oss.license_key = repo_license["key"]
+        oss.main_category_key = owner.main_category_key
+        # oss.related_categories.extend(owner.related_categories)
+        oss.owner_username = owner.username
 
         return oss
 
     except KeyError as e:
-        logger.error("owner's repo data keys have changed, so there was an error converting it to an OSS model", error=e)
+        logger.error("OSS's repo data keys have changed, so there was an error converting it to an OSS model", error=e)
         return None
 
     except Exception as e:
-        logger.error("Unknown error parsing github API for owners' details", error=e)
+        logger.error(f"Unknown error parsing github API for {owner.username}'s Repo: f{repo_dict.get("name")}", error=e)
         return None
 
