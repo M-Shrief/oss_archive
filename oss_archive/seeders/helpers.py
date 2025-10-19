@@ -1,82 +1,101 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import select
-from sqlalchemy import exc 
-from typing import Any
+from sqlalchemy import select, exc 
+from sqlalchemy.ext.asyncio import AsyncSession
+from typing import Any, Annotated
 from collections.abc import Sequence
 ### 
 from oss_archive.utils.logger import logger
-from oss_archive.database.models import MetaList, MetaItem, OSSoftware
-from oss_archive.schemas.general import ActionsType
+from oss_archive.database.models import OSS as OSSModel, Owner as OwnerModel, Category as CategoryModel
+from oss_archive.schemas.general import ActionsEnum
 
-def get_all_meta_lists(db: Session) -> Sequence[MetaList] | None:
-    try:
-        stmt = select(MetaList)
-        res = db.scalars(stmt)
-        meta_lists = res.all()
-        return meta_lists
-    except Exception as e:
-        logger.error("Unknown error getting all meta lists", error=e)
-        return None
-
-
-def get_all_meta_items(db: Session) -> Sequence[MetaItem] | None:
-    try:
-        stmt = select(MetaItem)
-        res = db.scalars(stmt)
-        meta_items = res.all()
-        return meta_items
-    except Exception as e:
-        logger.error("Unknown error getting all meta items", error=e)
-        return None
-
-
-def should_apply_action_on_oss(meta_item: MetaItem, repo_dict: dict[str, Any])-> bool:
-    """Decide should we apply the meta_item.actions on the OSS or not."""
-    should_download = False
-    repo_name: str | Any = repo_dict.get("name")
+def should_apply_action_on_oss(owner: OwnerModel, repo_name: str | None)-> bool:
+    """Decide should we apply the owner.actions on the OSS or not."""
     if repo_name is None:
         return False
 
+    should_download = False
     # Filter seeded repos depending on meta_item.actions && meta_item.actions_on
-    match meta_item.actions:
-        case ActionsType.ArchiveAll: # Get all repos without filtering
+    match owner.actions:
+        case ActionsEnum.ArchiveAll: # Get all repos without filtering
             should_download = True
-        case ActionsType.ArchiveOnly:
-            if repo_name in meta_item.actions_on:
+        case ActionsEnum.ArchiveOnly:
+            if repo_name in owner.actions_on:
                 should_download = True
-        case ActionsType.ArchiveExcept:
-            if repo_name not in meta_item.actions_on:
+        case ActionsEnum.ArchiveAllExcept:
+            if repo_name not in owner.actions_on:
                 should_download = True
     
     return should_download
 
 
-def does_meta_list_exists(meta_list_key: str, db: Session) -> bool:
+async def get_all_owners(db: Session) -> Sequence[OwnerModel] | None:
     try:
-        stmt = select(MetaList).where(MetaList.key == meta_list_key)
-        res = db.scalars(statement=stmt)
+        stmt = select(OwnerModel)
+        res = db.scalars(stmt)
+        owners = res.all()
+        logger.info("Got owners", length=len(owners))
+        return owners
+    except Exception as e:
+        logger.error("Unknown error getting all owners", error=e)
+        return None
 
-        _ = res.one() # if it exists in won't raise an error
-        return True
+
+async def does_category_exists(category_key: str, db: AsyncSession |  Session) -> bool | None:
+    """check if category exists, if result is None then there was unknown error."""
+    try:
+        if type(db) is AsyncSession:
+            stmt = select(CategoryModel).where(CategoryModel.key == category_key)
+            res = await db.scalars(statement=stmt)
+
+            _ = res.one() # if it exists in won't raise an error
+            return True
+        elif type(db) is Session:
+            stmt = select(CategoryModel).where(CategoryModel.key == category_key)
+            res = db.scalars(statement=stmt)
+
+            _ = res.one() # if it exists in won't raise an error
+            return True
     except exc.NoResultFound:
         return False
+    except Exception:
+        return None
 
-def does_meta_item_exists(meta_item_owner_username: str, db: Session) -> bool:
+async def does_owner_exists(owner_username: str, db: AsyncSession |  Session) -> bool | None:
+    """check if owner exists, if result is None then there was unknown error."""
     try:
-        stmt = select(MetaItem).where(MetaItem.owner_username == meta_item_owner_username)
-        res = db.scalars(statement=stmt)
+        if type(db) is AsyncSession:
+            stmt = select(OwnerModel).where(OwnerModel.username == owner_username)
+            res = await db.scalars(statement=stmt)
 
-        _ = res.one() # if it exists in won't raise an error
-        return True
+            _ = res.one() # if it exists in won't raise an error
+            return True
+        elif type(db) is Session:
+            stmt = select(OwnerModel).where(OwnerModel.username == owner_username)
+            res = db.scalars(statement=stmt)
+
+            _ = res.one() # if it exists in won't raise an error
+            return True
     except exc.NoResultFound:
         return False
+    except Exception:
+        return None
 
-def does_oss_exists(oss_fullname: str, db: Session) -> bool:
+async def does_oss_exists(oss_fullname: str, db: AsyncSession |  Session) -> bool | None:
+    """check if OSS exists, if result is None then there was unknown error."""
     try:
-        stmt = select(OSSoftware).where(OSSoftware.fullname == oss_fullname)
-        res = db.scalars(statement=stmt)
+        if type(db) is AsyncSession:
+            stmt = select(OSSModel).where(OSSModel.fullname == oss_fullname)
+            res = await db.scalars(statement=stmt)
 
-        _ = res.one() # if it exists in won't raise an error
-        return True
+            _ = res.one() # if it exists in won't raise an error
+            return True
+        elif type(db) is Session:
+            stmt = select(OSSModel).where(OSSModel.fullname == oss_fullname)
+            res = db.scalars(statement=stmt)
+
+            _ = res.one() # if it exists in won't raise an error
+            return True
     except exc.NoResultFound:
         return False
+    except Exception:
+        return None
