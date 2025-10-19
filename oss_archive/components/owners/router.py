@@ -11,6 +11,7 @@ from oss_archive.database.models import Owner as OwnerModel, Category as Categor
 from oss_archive.seeders.helpers import does_owner_exists
 from oss_archive.schemas import owner as owner_schemas, api as api_schemas
 from oss_archive.components.owners import schema as component_schemas
+from oss_archive.utils import json as json_utils
 
 router = APIRouter(tags=["Owners"])
 
@@ -114,6 +115,29 @@ async def create_owners(req_body: component_schemas.CreateOwners_Req, db: Annota
         logger.error("Error occurred while creating a owners", error=e)
         detail_msg = "An error occurred while creating a owners, try again later."
         raise HTTPException(status.HTTP_406_NOT_ACCEPTABLE, detail=detail_msg)
+
+@router.put(
+    "/owners/json",
+    status_code=status.HTTP_200_OK,
+    response_model=api_schemas.Update_Res,
+    response_model_exclude_none=True
+)
+async def sync_json(db: Annotated[AsyncSession, Depends(get_async_db)]):
+    try:
+        json_utils.del_files(json_utils.OwnersJSONFileConfig)
+
+        stmt = select(OwnerModel).order_by(OwnerModel.username)
+        res = await db.scalars(statement=stmt)
+        result = res.all()
+
+        owners: list[owner_schemas.JSONSchema] = [owner_schemas.JSONSchema.model_validate(item, from_attributes=True) for item in list(result)]
+
+        json_utils.write_json_files(json_utils.OwnersJSONFileConfig, owners)
+
+        return api_schemas.Update_Res()
+    except Exception as e:
+        logger.error("ERROR", error=e)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unknown error, try again later")
 
 @router.put(
     "/owners/{id}",
