@@ -10,12 +10,13 @@ from oss_archive.utils.logger import logger
 # Database
 from oss_archive.database.index import get_sync_db, async_engine
 from oss_archive.database.models import Base
-from oss_archive.seeders.index import seed
+from oss_archive.seeders.index import seed_owners_oss
 # Components
-from oss_archive.components.meta_lists.router import router as meta_lists_router
-from oss_archive.components.meta_items.router import router as meta_items_router
-from oss_archive.components.os_softwares.router import router as os_softwares_router
 from oss_archive.components.forgejo.router import router as forgejo_router
+from oss_archive.components.categories.router import router as categories_router
+from oss_archive.components.owners.router import router as owners_router
+from oss_archive.components.oss.router import router as oss_router
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -75,13 +76,14 @@ async def scalar_html() :
     )
 
 @app.get("/seed", status_code=status.HTTP_200_OK)
-def seed_database(db: Annotated[Session, Depends(dependency=get_sync_db)]):
+async def seed_database(db: Annotated[Session, Depends(dependency=get_sync_db)]):
+# async def seed_database(db: Annotated[Session, Depends(dependency=get_sync_db)]):
     try:
         # Maybe we can add query params to skip what we want
-        _ = seed(db)
+        _ = await seed_owners_oss(db)
         return {"message": "Seedded The Database Successfully"}
     except Exception as e:
-        logger.error("Seeding failure", error=e) 
+        logger.error("Seeding failure", error=e)
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Seeding operation has failed")
 
 @app.get("/ping")
@@ -90,7 +92,7 @@ async def ping():
 
 
 ### Adding API routes
-app.include_router(meta_lists_router, prefix="/api")
-app.include_router(meta_items_router, prefix="/api")
-app.include_router(os_softwares_router, prefix="/api")
 app.include_router(forgejo_router, prefix="/api")
+app.include_router(categories_router, prefix="/api")
+app.include_router(owners_router, prefix="/api")
+app.include_router(oss_router, prefix="/api")
