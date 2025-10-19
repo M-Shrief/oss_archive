@@ -4,136 +4,50 @@ from psycopg import errors
 from time import sleep
 ###
 from oss_archive.config import ENV
+from oss_archive.database.models import Owner as OwnerModel
+from oss_archive.schemas import general as general_schemas
 from oss_archive.utils.logger import logger
-# Database
-from oss_archive.database.models import MetaList as MetaListModel, MetaItem as MetaItemModel
-# Schemas
-from oss_archive.schemas import meta_list as MetaListSchemas, meta_item as MetaItemSchemas
-# JSON
-from oss_archive.components.meta_lists.json import get_meta_lists_from_json_files
-# Seeders' sources and helplers
-from oss_archive.seeders.sources import codeberg, github
-from oss_archive.seeders.helpers import does_meta_list_exists, get_all_meta_items
+from oss_archive.seeders import helpers
+from oss_archive.seeders.sources import github, codeberg
+
+async def seed():
+    ### Make requests to outer APIs async, but the seeding operation can by sync
+    # Steps:
+    # 1 - Check if categories are seeded into its table
+    # 2 - check if owners are seeded into its table
+
+    # 3-  Pull owners and start using each item to seed OSS into oss_table    
 
 
-class SeedResults(TypedDict):
-    is_meta_lists_seeded: bool
-    is_meta_items_seeded: bool
-    is_ossoftwares_seeded: bool
-
-def seed(db: Session):
-    try:
-        # 1 - Seeding all MetaLists one by one
-        # 2 - Seeding MetaList's items one by one
-        # 3 - Seed MetaItem's Open-Source Softwares one by one
-
-        seed_meta_lists(db)
-        seed_meta_items(db)
-        seed_os_softwares(db)
-    except Exception as e:
-        logger.error("Error in seed's operations",  error=e)
-        return SeedResults(is_meta_lists_seeded=False, is_meta_items_seeded=False, is_ossoftwares_seeded=False)
+    pass
 
 
-def seed_meta_lists(db: Session):
-    meta_lists: list[MetaListSchemas.JSONSchema] = get_meta_lists_from_json_files()
-    for meta_list in meta_lists:
-        # Seed JSON MetaList's metadata as a MetaListModel  
-        _ = seed_meta_list(meta_list, db)
-    
-    return
+async def seed_owners_oss(db: Session):
+    owners = await helpers.get_all_owners(db)
+    if owners is None:
+        return
 
-def seed_meta_list(meta_list: MetaListSchemas.JSONSchema, db: Session)->MetaListModel | None:
-    """Seed Meta list from the meta list's metadata in its json file"""
-    try:
-        ### Used 2 different conditions block to differntiate the logs.
-        if not meta_list.reviewed:
-            logger.info(f"Skipped {meta_list.key}'s meta list, because it's not reviewed")
-            return None
+    for owner in owners:
 
-        meta_list_does_exists = does_meta_list_exists(meta_list.key, db)
-        if meta_list_does_exists:
-            logger.info(f"Skipped {meta_list.key}'s meta list, because it's already seeded")
-            return None
-
-        new_meta_list = MetaListModel()
-        new_meta_list.key = meta_list.key
-        new_meta_list.name = meta_list.name
-        new_meta_list.tags = meta_list.tags
-        new_meta_list.priority = meta_list.priority
-        new_meta_list.reviewed = meta_list.reviewed
-
-
-        db.add(new_meta_list)
-        db.commit()
-        return new_meta_list        
-
-    except errors.UniqueViolation as e:
-        db.rollback()
-        logger.error(f"Error Inserting meta_list for Unique key Violation, using {meta_list.key} meta_list", meta_list=meta_list, error=e)
-        return None
-    except errors.CheckViolation as e:
-        db.rollback()
-        logger.error(f"Error Inserting meta_list for check Violation, using {meta_list.key} meta_list", meta_list=meta_list, error=e)
-        return None
-    except Exception as e: ## need effective error handling here
-        db.rollback()
-        logger.error(f"Unknown Error when Inserting meta_list, using {meta_list.key} meta_list", meta_list=meta_list, error=e)
-        return None
-
-def seed_meta_items(db: Session):
-    meta_lists = get_meta_lists_from_json_files()
-    
-    for meta_list in meta_lists:
-        meta_list_does_exists = does_meta_list_exists(meta_list.key, db)
-        if not meta_list_does_exists:
+        # So that we limit owners seeded while testing.
+        if ENV == "dev" and owner.main_category_key not in ["vcs"]:
+        # if ENV == "dev" and owner.main_category_key not in ["ai", "prog_awe"]:
             continue
         
-        # Limit meta_items seeded while testing.
-        if ENV == "dev" and meta_list.key not in ["internet", "ai", "prog_awe"]:
-            continue 
-
-        for item in meta_list.items:
-            _ = seed_meta_item_from_source(meta_list_key=meta_list.key, meta_item=item, db=db)
-    return
-
-
-def seed_meta_item_from_source(meta_list_key: str, meta_item: MetaItemSchemas.JSONSchema, db: Session) -> MetaItemModel | None: #-> Owner:
-    match meta_item.source:
-        case "github":
-            return github.seed_meta_item(meta_list_key, meta_item, db)
-        case "codeberg":
-            return codeberg.seed_meta_item(meta_list_key, meta_item, db)
-        # Defualt None value for unknown sources.
-        case _:
-            logger.error("Unkown OSS source", meta_list_key=meta_list_key, meta_item_owner_username=meta_item.owner_username)
-            return None
-
-def seed_os_softwares(db: Session):
-    meta_items = get_all_meta_items(db)
-    if meta_items is None:
-        return
-    
-    for meta_item in meta_items:
-
-        # Limit meta_items seeded while testing.
-        if ENV == "dev" and meta_item.meta_list_key not in ["internet", "ai", "prog_awe"]:
-            continue 
-
-        _ = seed_os_softwares_from_source(meta_item, db)
+        logger.info(f"Owner is in {owner.main_category}")
+        _ = await seed_owner_oss_from_source(owner, db)
         # Sleep 0.5 seconds to prevent source's rate-limit
         sleep(0.5)
     return
 
-def seed_os_softwares_from_source(meta_item: MetaItemModel, db: Session): #-> Owner:
-    match meta_item.source:
-        case "github":
-            return github.seed_os_softwares(meta_item, db)
+async def seed_owner_oss_from_source(owner: OwnerModel, db: Session): #-> Owner:
+    match owner.source:
+        # case "github":
+        #     logger.info("Owner is from github")
+        #     return await github.seed_owner_oss(owner, db)
         case "codeberg":
-            return codeberg.seed_os_softwares(meta_item, db)
+            return await codeberg.seed_owner_oss(owner, db)
         # Defualt None value for unknown sources.
         case _:
-            logger.error("Unkown OSS source", meta_item_owner_username=meta_item.owner_username)
+            logger.error("Unkown OSS source", owner=owner)
             return None
-
-
