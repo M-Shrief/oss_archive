@@ -9,6 +9,7 @@ from oss_archive.database.models import Category as CategoryModel
 from oss_archive.seeders.helpers import does_category_exists
 from oss_archive.schemas import category as category_schemas, api as api_schemas
 from oss_archive.components.categories import schema as component_schemas #, json as component_json
+from oss_archive.utils import json as json_utils
 
 router = APIRouter(tags=["Categories"])
 
@@ -111,6 +112,28 @@ async def create_categories(req_body: component_schemas.CreateCategories_Req, db
         detail_msg = "An error occurred while creating a categories, try again later."
         raise HTTPException(status.HTTP_406_NOT_ACCEPTABLE, detail=detail_msg)
 
+@router.put(
+    "/categories/json",
+    status_code=status.HTTP_200_OK,
+    response_model=api_schemas.Update_Res,
+    response_model_exclude_none=True
+)
+async def sync_json(db: Annotated[AsyncSession, Depends(get_async_db)]):
+    try:
+        json_utils.del_files(json_utils.CategoriesJSONFileConfig)
+
+        stmt = select(CategoryModel).order_by(CategoryModel.key)
+        res = await db.scalars(statement=stmt)
+        result = res.all()
+
+        categories: list[category_schemas.JSONSchema] = [category_schemas.JSONSchema.model_validate(item, from_attributes=True) for item in list(result)]
+
+        json_utils.write_json_files(json_utils.CategoriesJSONFileConfig, categories)
+
+        return api_schemas.Update_Res()
+    except Exception as e:
+        logger.error("ERROR", error=e)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unknown error, try again later")
 
 @router.put(
     "/categories/{key}",
