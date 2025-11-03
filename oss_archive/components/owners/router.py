@@ -8,7 +8,7 @@ from typing import Annotated
 from oss_archive.utils.logger import logger
 from oss_archive.database.index import get_async_db
 from oss_archive.database.models import Owner as OwnerModel, Category as CategoryModel
-from oss_archive.seeders.helpers import does_owner_exists
+from oss_archive.database.helpers import does_owner_exists
 from oss_archive.schemas import owner as owner_schemas, api as api_schemas
 from oss_archive.components.owners import schema as component_schemas
 from oss_archive.utils import json as json_utils
@@ -95,7 +95,7 @@ async def create_owners(req_body: component_schemas.CreateOwners_Req, db: Annota
         already_exists: list[str] = []
 
         for owner in req_body.owners:
-            does_exist = await does_owner_exists(owner.username, db)
+            does_exist = await does_owner_exists(owner.username, async_db=db)
             if does_exist:
                 already_exists.append(owner.username)
                 continue
