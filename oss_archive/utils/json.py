@@ -10,19 +10,6 @@ from oss_archive.utils.formatter import format_file_name
 # from oss_archive.schemas.owner import JSONSchema as OwnerJSONSchema
 # from oss_archive.schemas.oss import JSONSchema as OSSJSONSchema
 
-
-def sync_json():
-    """
-    1 - First define what you're syncing: Categories, Owners or OSS
-    2 - Get the data and sorted by priority first, then sort every priority group alphabetically. 
-    3 - Delete old files in the path related to the data, so that we have the recent files only.
-    4 - Start syncing and writing the data in it's related by path,
-        we write the data to files by having every file's items which doesn't exceed max_length the was defined.
-        Every file have a name that is defined by a convention "{categories|owners|oss}-file_number}"
-        and that file_number related to first items group, second group,...etc.          
-    """
-    pass
-
 DEFAULT_MAX_LENGTH = 100 # used as a max_length for the list of blocks in blocks' JSON file.
 
 class JSONFile(
@@ -43,7 +30,26 @@ CategoriesJSONFileConfig = JSONFileConfigType(name_prefix="categories", json_dir
 OwnersJSONFileConfig = JSONFileConfigType(name_prefix="owners", json_dir=f"{JSON_FILES_PATH}owners/", items_max_length=DEFAULT_MAX_LENGTH)
 OSSJSONFileConfig = JSONFileConfigType(name_prefix="oss", json_dir=f"{JSON_FILES_PATH}oss/", items_max_length=DEFAULT_MAX_LENGTH)
 
+def get_json_files(json_config_file: JSONFileConfigType) -> list[str]:
+    files = [file for file in os.listdir(json_config_file.get("json_dir")) if file.endswith('.json')]
+    return files
 
+def get_json_file_data(json_config_file: JSONFileConfigType, file_name: str):
+    try:
+        with open(json_config_file.get("json_dir")+file_name, 'r') as file:
+            data = json.load(file)
+            json_file = JSONFile(**data)
+
+            return json_file
+    except json.JSONDecodeError as e:
+        logger.error(f"Couldn't read JSON file: {file_name}", error=e)
+        return None
+    except ValidationError as e:
+        logger.error(f"Error in JSON file's schema, file: {file_name}", error=e)
+        return None
+    except Exception as e:
+        logger.error(f"Unknown error in JSON file, file: {file_name}", error=e)
+        return None
 
 def del_files(config: JSONFileConfigType):
     """Delete all JSON files"""
