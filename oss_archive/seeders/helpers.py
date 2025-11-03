@@ -26,17 +26,60 @@ def should_apply_action_on_oss(owner: OwnerModel, repo_name: str | None)-> bool:
     
     return should_download
 
-
-async def get_all_owners(db: Session) -> Sequence[OwnerModel] | None:
+async def get_all_categories(async_db: AsyncSession | None = None, sync_db: Session | None = None):
+    """Note: You have to pass async_db or sync_db, if you didn't it'll return None"""
     try:
-        stmt = select(OwnerModel)
-        res = db.scalars(stmt)
-        owners = res.all()
-        return owners
+        stmt = select(CategoryModel)
+        if async_db is not None:
+            res = await async_db.scalars(statement=stmt)
+            categories = res.all()
+            return categories
+        elif sync_db is not None:
+            res = sync_db.scalars(statement=stmt)
+            categories = res.all()
+            return categories
+        else:
+            return None
     except Exception as e:
         logger.error("Unknown error getting all owners", error=e)
         return None
 
+
+async def get_all_owners(async_db: AsyncSession | None = None, sync_db: Session | None = None):
+    """Note: You have to pass async_db or sync_db, if you didn't it'll return None"""
+    try:
+        stmt = select(OwnerModel)
+        if async_db is not None:
+            res = await async_db.scalars(statement=stmt)
+            owners = res.all()
+            return owners
+        elif sync_db is not None:
+            res = sync_db.scalars(statement=stmt)
+            owners = res.all()
+            return owners
+        else:
+            return None
+    except Exception as e:
+        logger.error("Unknown error getting all owners", error=e)
+        return None
+
+async def get_all_oss(async_db: AsyncSession | None = None, sync_db: Session | None = None):
+    """Note: You have to pass async_db or sync_db, if you didn't it'll return None"""
+    try:
+        stmt = select(OSSModel)
+        if async_db is not None:
+            res = await async_db.scalars(statement=stmt)
+            oss_list = res.all()
+            return oss_list
+        elif sync_db is not None:
+            res = sync_db.scalars(statement=stmt)
+            oss_list = res.all()
+            return oss_list
+        else:
+            return None
+    except Exception as e:
+        logger.error("Unknown error getting all OSS", error=e)
+        return None
 
 async def does_category_exists(category_key: str, async_db: AsyncSession | None = None, sync_db: Session | None = None) -> bool | None:
     """check if category exists, if result is None then there was unknown error.
