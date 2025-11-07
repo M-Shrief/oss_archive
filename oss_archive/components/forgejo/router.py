@@ -104,13 +104,10 @@ async def create_org_for_user(body: CreateOrgReqBody):
             headers=base_headers
         ) 
 
-        if result is None:
+        if result is None or result.status_code != 201:
             raise Exception("Couldn't create org")
-        # if result.status_code != 201:
-        #     raise error
-        #     pass
 
-        new_org: ForgejoUser = result.json()
+        new_org = result.json()
         return new_org
     except Exception as e:
         logger.error("Couldn't add new org", error=e)
