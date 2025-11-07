@@ -5,7 +5,7 @@ from oss_archive.config import Forgejo
 from oss_archive.utils import httpx
 from oss_archive.utils.logger import logger
 from oss_archive.components.forgejo.schema import ForgejoOrganization, ForgejoUser, ForgejoRepo, ForgejoLicense, ForgejoLicensesListItem, CreateOrgReqBody, AddUserReqBody, MigrateRepoReqBody
-from oss_archive.components.forgejo.tasks import migrate_repo_task
+from oss_archive.components.forgejo import tasks as component_tasks
 from oss_archive.components.forgejo.shared import base_headers
 
 router = APIRouter(tags=["Forgejo"])
@@ -334,7 +334,7 @@ async def get_repo(owner: str, repo: str):
 )
 async def migrate_repo(body: MigrateRepoReqBody, background_tasks: BackgroundTasks):
     try:
-        background_tasks.add_task(migrate_repo_task, body)
+        background_tasks.add_task(component_tasks.migrate_repo, body)
         return {"message": "Repo is being migrated and it takes time, please wait and check it."}
     except Exception as e:
         logger.error("Couldn't add migrate repo", error=e)

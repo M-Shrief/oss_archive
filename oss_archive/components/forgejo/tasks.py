@@ -7,7 +7,7 @@ from oss_archive.components.forgejo.schema import ForgejoRepo, MigrateRepoReqBod
 from oss_archive.components.forgejo.shared import base_headers
 
 
-async def migrate_repo_task(repo_data: MigrateRepoReqBody):
+async def migrate_repo(repo_data: MigrateRepoReqBody):
     logger.info("Migrating repo...", repo=f"{repo_data.repo_owner}/{repo_data.repo_name}", source=repo_data.clone_addr)
 
     result = await httpx.async_post(
@@ -15,7 +15,7 @@ async def migrate_repo_task(repo_data: MigrateRepoReqBody):
         endpoint="/repos/migrate",
         body=repo_data.model_dump(),
         headers=base_headers,
-        timeout=Timeout(timeout=500.0, connect=100.0)
+        timeout=Timeout(timeout=None, connect=10.0)
         )
 
     if result is None:
