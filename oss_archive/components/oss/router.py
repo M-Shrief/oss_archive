@@ -7,7 +7,7 @@ from typing import Annotated
 ###
 from oss_archive.database.index import get_async_db
 from oss_archive.database.models import OSS as OSSModel
-from oss_archive.seeders.helpers import does_oss_exists
+from oss_archive.database.helpers import does_oss_exists
 from oss_archive.utils.logger import logger
 from oss_archive.components.oss import schema as component_schemas
 from oss_archive.schemas import oss as oss_schemas, api as api_schemas

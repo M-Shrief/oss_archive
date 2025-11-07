@@ -6,7 +6,7 @@ from typing import Annotated
 from oss_archive.utils.logger import logger
 from oss_archive.database.index import get_async_db
 from oss_archive.database.models import Category as CategoryModel
-from oss_archive.seeders.helpers import does_category_exists
+from oss_archive.database.helpers import does_category_exists
 from oss_archive.schemas import category as category_schemas, api as api_schemas
 from oss_archive.components.categories import schema as component_schemas #, json as component_json
 from oss_archive.utils import json as json_utils
