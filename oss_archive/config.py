@@ -35,8 +35,12 @@ DB = DatabaseConfigType(
 class ForgejoType(TypedDict):
     base_url: str | None
     access_token: str | None
+    admin_username: str | None
+    org_for_mirrors: str | None
 
 Forgejo = ForgejoType(
     base_url = __env.get("FORGEJO_BASE_URL"),
-    access_token = __env.get("FORGEJO_ACCESS_TOKEN")
+    access_token = __env.get("FORGEJO_ACCESS_TOKEN"),
+    admin_username = __env.get("FORGEJO_ADMIN_USERNAME"),
+    org_for_mirrors = __env.get("FORGEJO_ORG_FOR_MIRRORS")
 )

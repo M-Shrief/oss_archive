@@ -7,26 +7,29 @@ from oss_archive.database.models import Category as CategoryModel, Owner as Owne
 from oss_archive.database import helpers as db_helpers
 from oss_archive.seeders.json import seed_json
 from oss_archive.seeders.sources import github as github_source, codeberg as codeberg_source
+from oss_archive.seeders.forgejo import create_org_for_mirrors
 
 async def seed(db: Session):
     ### Make requests to outer APIs async, but the seeding operation can by sync
     # Steps:
     # 1 - We seed data in json-archive first to the database
-    _ = await seed_json(db)
-    # 2 - we should stop the work here if there was no data in the databse, we should atleast check for categories & owners tables.
+    # _ = await seed_json(db)   
+    # 2 -  Pull owners and start using each item to seed OSS into oss_table    
+    # _ = await seed_owners_oss(db)
 
-    # 3-  Pull owners and start using each item to seed OSS into oss_table    
-
-    # 4 - After that we should create "mirrors" user in forgejo if it doesn't exist
-
-    # 5 - Then we begin mirrors OSS while prioritizing the most important one to be done first,
+    # 3 - After that we should create "mirrors" user in forgejo if it doesn't exist
+    is_org_for_mirrors_exists = await create_org_for_mirrors()
+    if is_org_for_mirrors_exists is False:
+        return
+    # 4 - Then we begin mirrors OSS while prioritizing the most important one to be done first,
     # and use a method that enable us to resume the work if it was stopped for any reason, and we can use WAL for that. 
+    
     return
 
 
 async def seed_owners_oss(db: Session):
     owners = await db_helpers.get_all_owners(sync_db=db)
-    if owners is None:
+    if owners is None or len(owners) == 0:
         return
 
     for owner in owners:
